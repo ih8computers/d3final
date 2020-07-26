@@ -1,3 +1,26 @@
 <html>
-  <h1>Landing Page</h1>
+<script src='https://d3js.org/d3.v5.min.js'></script>
+<script type="text/javascript" src="src/test.js"></script>
+<script type="text/javascript" src="src/chart2.js"></script>
+<script type="text/javascript" src="src/chart3.js"></script>
+<script type="text/javascript" src="src/chart4.js"></script>
+<script type="text/javascript" src="src/slide_ctrl.js"></script>
+<link rel="stylesheet" type="text/css" href="style/classes.css">
+
+  <body onload="init()">
+    <h1>Landing Page</h1>
+    <div width=1000px height=440px style="position:relative">
+      <button onclick="onclickTest()" class='scatter'>Test Button</button>
+      <svg id="display_svg" width="80%" height="80%"></svg>
+      <svg id="chart1" class="svg_slide" width="80%" height="80%" display=none>1</svg>
+      <svg id="chart2" class="svg_slide" width="80%" height="80%" display=none>2</svg>
+      <svg id="chart3" class="svg_slide" width="80%" height="80%" display=none>3</svg>
+      <svg id="chart4" class="svg_slide" width="80%" height="80%" display=none>4</svg>
+
+      <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
+      <a class="next" onclick="changeSlide(1)">&#10095;</a>
+    </div>
+
+  </body>
+
 </html>
