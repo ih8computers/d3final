@@ -1,0 +1,41 @@
+,Database Field Descriptions,,,,,,
+,,,,,,,
+,Column fields,Class,Description,Missing value allowed?,,,
+,Country or area,Character,Country or area name,N,,,
+,ISO code,Numeric,Unique code assigned to each country or area by the International Organization for Standardization Code,N,,,
+,YearStart,Numeric,Year when data collection began,N,,,
+,YearEnd,Numeric,Year when data collection ended,N,,,
+,Sex,Character,Population subgroup by sex (male or female),N,,,
+,MaritalStatus,Character,"Categories of marital status, including (1) currently married; (2) ever married; (3) single (never married); (4) consensual union (living together); (5) widowed and not remarried; (6) divorced and not remarried; (7) separated (not living together); and (8) variants of these categories as reported in the data sources.",N,,,
+,Non-standard_AgeGroups,Integer,Non-standard age groups that are not quinquennial,Y,,,
+,Series_contains_Non-standard_AgeGroups,Integer,Series contain non-standard age groups that are not quinquennial,Y,,,
+,AgeGroup,Character,"Age group, generally five-year age group but also includes non-standard age groups. Further details are specified in ""Note on non-standard age groups"".",N,,,
+,AgeStart,Numeric,Lower limit of age group,N,,,
+,AgeEnd,Numeric,Upper limit of age group. Value of 999 indicates an open-ended age group.,N,,,
+,DataValue,Numeric,Value of indicator,N,,,
+,DataProcess,Character,"Type of data source from which an indicator was processed (e.g., census, survey, estimate)",N,,,
+,DataCatalog ShortName,Character,Abbreviated short name for data source,N,,,
+,DataCatalog ID,Numeric,"Identification Number assigned to a data point in DataCatalog, a database of data sources maintained by the Population Division, Department of Economic and Social Affairs, United Nations",N,,,
+,DataCatalog LongName,Character,Long name for data source that includes the type of data source and reference year,N,,,
+,Data Source,Character,"Source of data include censuses, household surveys or national estimate provided by statistical offices and cross-national survey programmes. Further details are specified in ""DataProcess"".
+  DHS_HH =  Demographic and Health Survey, Household Data
+  DHS_STATcompiler = Demographic and Health Survey, STATcompiler
+  Eurostat = Statistical office of the European Union
+  GFHS = Gulf Family Health Survey
+  GGS = Generations and Gender Survey
+  INED = Institut National d'Études Démographiques
+  IPUMS = Integrated Public Use Microdata Series
+  MICS = Multiple Indicator Cluster Survey
+  MICS_HH = Multiple Indicator Cluster Survey, Household Data
+  National statistics = National Statistics Office
+  PAPCHILD = Pan-Arab Project for Child Development Survey
+  PAPFAM = Pan-Arab Project for Family Health Survey
+  RHS = Reproductive Health Survey
+  UNSD = United Nations Statistics Division
+  US Census Bureau = United States Census Bureau",N,,,
+,Including_consensual_unions,Integer,"Note on when data on currently married are reported as including consensual union, indicated by a value of 1",Y,,,
+,Note on Age groups,Character,"Note on when age group is non-standard, persons of unknown age are excluded or totals do not add up to the sum of the respective components of the age group because of rounding.",Y,,,
+,Note on Marital Status,Character,Note on when the marital status category is atypical from the standard marital status categories,Y,,,
+,Note on Data,Character,"Note on data, including when adjusted, provisional or based on a sample of census returns",Y,,,
+,Note on Country and Population,Character,"Note on when partial coverage of population or geographic area is reported, or when the coverage is not consistent in a time series",Y,,,
+,Note Other,Character,Other supplementary notes,Y,,,
