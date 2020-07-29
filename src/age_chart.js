@@ -1,4 +1,6 @@
-function draw_scatter_4(data){
+function draw_age(data){
+
+  return;
 
   scatter_id = '#chart4';
   width = 200;
@@ -34,4 +36,9 @@ function draw_scatter_4(data){
                   .call(d3.axisBottom(x)
                           .tickValues([10,20,50,100])
                           .tickFormat(d3.format("~s")));
+}
+
+function ud_age(){
+
+  dropdown = updateDropdown('#select_country', age_countries, drop_callback);
 }

@@ -91,3 +91,8 @@ button.scatter:hover {
   background-color: #f1f1f1;
   color: black;
 }
+
+.droppy {
+  top: 0;
+  position: absolute;
+}

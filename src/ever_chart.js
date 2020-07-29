@@ -1,9 +1,8 @@
+function draw_ever(data){
 
+  return;
 
-function draw_scatter_1(data){
-
-  scatter_id = '#chart1';
-  //scatter_id = '#display_svg';
+  scatter_id = '#chart2';
   width = 200;
   height = 200;
   margin = 50;
@@ -13,12 +12,17 @@ function draw_scatter_1(data){
   y=d3.scaleLog().domain([10,150]).range([height,0]);
   r=d3.scaleLinear().domain([0,14]).range([0,14]);
 
+  drop_options = ['three', 'four'];
+
+  // dropdown
+  //dropdown = getDropdown(div_id, drop_options, drop_callback);
+
    d3.select(scatter_id).append('g')
                    .attr('transform',"translate("+margin+","+margin+")")
                    .selectAll('circle')
                    .data(data).enter()
                    .append("circle")
-                   .attr('class','scatter')
+                   .attr('class','scatter2')
                    .attr('cx', function(d){return x(d.AverageCityMPG);})
                    .attr('cy', function(d){return y(d.AverageHighwayMPG);})
                    .attr('r', function(d){return 2+r(d.EngineCylinders);});
@@ -37,4 +41,9 @@ function draw_scatter_1(data){
                   .call(d3.axisBottom(x)
                           .tickValues([10,20,50,100])
                           .tickFormat(d3.format("~s")));
+}
+
+function ud_ever(){
+
+  dropdown = updateDropdown('#select_country', ever_countries, drop_callback);
 }

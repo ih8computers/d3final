@@ -1,6 +1,8 @@
-function draw_scatter_2(data){
+function draw_currently(data){
 
-  scatter_id = '#chart2';
+  return;
+
+  scatter_id = '#chart3';
   width = 200;
   height = 200;
   margin = 50;
@@ -15,7 +17,7 @@ function draw_scatter_2(data){
                    .selectAll('circle')
                    .data(data).enter()
                    .append("circle")
-                   .attr('class','scatter2')
+                   .attr('class','scatter3')
                    .attr('cx', function(d){return x(d.AverageCityMPG);})
                    .attr('cy', function(d){return y(d.AverageHighwayMPG);})
                    .attr('r', function(d){return 2+r(d.EngineCylinders);});
@@ -34,4 +36,9 @@ function draw_scatter_2(data){
                   .call(d3.axisBottom(x)
                           .tickValues([10,20,50,100])
                           .tickFormat(d3.format("~s")));
+}
+
+function ud_curr(){
+
+  dropdown = updateDropdown('#select_country', currently_countries, drop_callback);
 }
