@@ -2,9 +2,6 @@
 <script src='https://d3js.org/d3.v5.min.js'></script>
 <script type="text/javascript" src="src/test.js"></script>
 <script type="text/javascript" src="src/smam_chart.js"></script>
-<script type="text/javascript" src="src/ever_chart.js"></script>
-<script type="text/javascript" src="src/currently_chart.js"></script>
-<script type="text/javascript" src="src/age_chart.js"></script>
 <script type="text/javascript" src="src/slide_ctrl.js"></script>
 <link rel="stylesheet" type="text/css" href="style/classes.css">
 <link rel="stylesheet" type="text/css" href="style/vis_display.css">
@@ -14,12 +11,11 @@
     <div id="vis_div" style="position:relative">
       <select id="select_country">
       </select>
-      <!--
-      <div>
-        <input type="radio" name="gender" value="male"> Male </input>
-        <input type="radio" name="gender" value="female"> Female </input>
+      <div style='right:0; position: absolute; top:0'>
+        <input type="radio" name="gender" value="Women" > Men </input>
+        <input type="radio" name="gender" value="Men" checked> Women </input>
+        <input type="radio" name="gender" value="All" > All </input>
       </div>
-    -->
       <svg id="display_svg" width="80%" height="80%"></svg>
       <svg id="chart1" class="svg_slide" width="80%" height="80%" display=none>1</svg>
       <svg id="chart2" class="svg_slide" width="80%" height="80%" display=none>2</svg>

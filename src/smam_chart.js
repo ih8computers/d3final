@@ -9,9 +9,11 @@ function draw_smam(data){
   margin = 50;
   xax = 250;
 
+  return;
+
   var domain = [];
 
-  data = data.filter(function(d){ 
+  data = data.filter(function(d){
 		if (d['Country or area'] == 'Afghanistan' && d['Sex'] == 'Men') 		{
     		if(!domain.includes(d['YearStart'])){
     			domain.push(d['YearStart']);
@@ -25,10 +27,4 @@ function draw_smam(data){
     }
 
   });
-}
-
-function ud_smam(){
-
-  dropdown = updateDropdown('#select_country', smam_countries, drop_callback);
-  //alert("smam");
 }
