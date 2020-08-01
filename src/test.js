@@ -4,6 +4,11 @@ var everJSON = {};
 var currJSON = {};
 var ageJSON = {};
 
+var width = 800;
+var height = 400;
+var margin = 50;
+var xax = height + margin;
+
 // TODO: delete these
 var default_filters = {};
 default_filters.country = 'United States of America';
@@ -13,6 +18,7 @@ default_filters.sex = 'Men';
 var filters = {};
 filters.country = 'United States of America';
 filters.sex = 'Men';
+filters.status = 'Married';
 var scene_list = [];
 
 function init(){
@@ -26,23 +32,25 @@ async function pullData(){
   smamJSON.data = await d3.csv("data/SMAM.csv");
   smamJSON.countries = getCountries(smamJSON.data);
 
-  everJSON.data = await d3.csv("data/EVER_MARRIED.csv");
-  everJSON.countries = getCountries(everJSON.data);
+  everJSON.data = null;//await d3.csv("data/EVER_MARRIED.csv");
+  everJSON.countries = null;//getCountries(everJSON.data);
 
-  currJSON.data = await d3.csv("data/CURRENTLY_MARRIED.csv");
-  currJSON.countries = getCountries(currJSON.data);
+  currJSON.data = null;//await d3.csv("data/CURRENTLY_MARRIED.csv");
+  currJSON.countries = null;//getCountries(currJSON.data);
 
   ageJSON.data = await d3.csv("data/MARITAL_STATUS_BY_AGE.csv");
   ageJSON.countries = getCountries(ageJSON.data);
 
-  scene_list = [ smamJSON, everJSON, currJSON, ageJSON ];
-  scene_list.map(function(record){ record.filters = default_filters });
+  scene_list = [ smamJSON, ageJSON, ageJSON, ageJSON ];
+  //scene_list.map(function(record){ record.filters = default_filters });
 
   updateDropdown(scene_list[slide_index].countries);
 
   setupListeners();
 
-  chart();
+  smam_chart();
+
+  loaded();
 
 
 }
@@ -73,12 +81,17 @@ function getCountries(cdata){
 
 }
 
-function updateChart(){
+function updateSMAMChart(){
 
   var scene = scene_list[slide_index];
   console.log(slide_index);
   var fdata = getFilteredData(scene.data, filters);
   var domain = fdata.domain;
+
+  // width = 800;
+  // height = 800;
+  // margin = 50;
+  // xax = width - margin;
 
   x=d3.scaleBand().domain(domain).range([0,width]);
   y=d3.scaleLinear().domain([0,30]).range([height,0]);
@@ -92,10 +105,10 @@ function updateChart(){
   bars.enter().append('rect').merge(bars)
                   //.transition()
                   //.duration(2800)
-                  .attr('x', function(d,i){return x(d['YearStart']);})
-                  .attr('y', function(d,i){console.log(d['DataValue']);return y(d['DataValue']);})
-                  .attr('width', function(d,i){return width/domain.length})
-                  .attr('height', function(d,i){return height-y(d['DataValue']);});
+                  .attr('x', function(d,i){return x(d.YearStart);})
+                  .attr('y', function(d,i){console.log(d.DataValue);return y(d.DataValue);})
+                  .attr('width', function(d,i){return x.bandwidth()})
+                  .attr('height', function(d,i){return height-y(d.DataValue);});
 
   bars.exit().remove();
 
@@ -151,20 +164,20 @@ function getFilteredData(data, filters){
 
 }
 
-function chart(){
+function smam_chart(){
 
   var scene = scene_list[slide_index];
   console.log(slide_index);
   var fdata = getFilteredData(scene.data, filters);
-  var domain = fdata.domain;
+  var domain = fdata.map(d => d.YearStart);//fdata.domain;
 
   //console.log(fdata);
   //console.log(fdata.domain);
 
-  width = 200;
-  height = 200;
-  margin = 50;
-  xax = 250;
+  // width = 800;
+  // height = 800;
+  // margin = 50;
+  // xax = width - margin;
 
   x=d3.scaleBand().domain(domain).range([0,width]);
   y=d3.scaleLinear().domain([0,30]).range([height,0]);
@@ -182,10 +195,10 @@ function chart(){
   bars.enter().append('rect').merge(bars)
                   //.transition()
                   //.duration(2800)
-                  .attr('x', function(d,i){return x(d['YearStart']);})
-                  .attr('y', function(d,i){console.log(d['DataValue']);return y(d['DataValue']);})
-                  .attr('width', function(d,i){return width/domain.length})
-                  .attr('height', function(d,i){return height-y(d['DataValue']);});
+                  .attr('x', function(d,i){return x(d.YearStart);})
+                  .attr('y', function(d,i){console.log(d.DataValue);return y(d.DataValue);})
+                  .attr('width', function(d,i){return x.bandwidth()})
+                  .attr('height', function(d,i){return height-y(d.DataValue);});
 
   d3.select('svg').attr('width',width+2*margin)
                   .attr('height', height+2*margin)
@@ -210,3 +223,18 @@ console.log(fdata);
 {'DataValue':15, 'YearStart':domain[1]},{'DataValue':20, 'YearStart':domain[2]}];}
 
 */
+
+function updateChart(){
+
+  if(slide_index == 0){
+    updateSMAMChart();
+  } else if(slide_index == 1) {
+    updateAgeChart();
+  }
+}
+
+function loaded(){
+
+  document.getElementById('loading_screen').style.display = 'none';
+  document.getElementById('vis_div').style.display = 'block';
+}

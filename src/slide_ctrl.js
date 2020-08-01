@@ -12,7 +12,7 @@ function onload_slides(){
 
   slide_list = document.getElementsByClassName(slide_class);
   slide_display = document.getElementById('display_svg');
-  slide_Max = slide_list.length -1;
+  slide_Max = 3//;slide_list.length -1;
 
 }
 
@@ -37,7 +37,11 @@ function changeSlide(dir){
   //if(slide_index == 3) updateDropdown('#select_country', ["BUTTS"]);
 
   slide_display.innerHTML = "";//slide_list[slide_index].innerHTML;
-  updateChart();
+  if(slide_index < 1){
+    smam_chart();
+  } else {
+    age_chart();
+  }
 
 }
 
