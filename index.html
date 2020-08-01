@@ -16,10 +16,11 @@
     <!-- <div id="vis_div" style="position:relative;"> -->
       <select id="select_country">
       </select>
+      <!-- <button id="PlayPause" onclick="playpause_callback(event)">Play</button> -->
       <div id='gender_div' style='right:0; position: absolute; top:0'>
-        <input type="radio" name="gender" value="Women" > Men </input>
-        <input type="radio" name="gender" value="Men" checked> Women </input>
-        <input type="radio" name="gender" value="All" > All </input>
+        <input type="radio" name="gender" value="Women" disabled > Men </input>
+        <input type="radio" name="gender" value="Men" checked disabled > Women </input>
+        <input type="radio" name="gender" value="All" disabled> All </input>
       </div>
       <svg id="display_svg" width="80%" height="80%"></svg>
     <!--  <svg id="chart1" class="svg_slide" width="80%" height="80%" display=none>1</svg>
@@ -30,10 +31,11 @@
       <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
       <a class="next" onclick="changeSlide(1)">&#10095;</a>
       <div id="ys_div">
-        <input id="yearSlider" type="range" min="0" max="10" value="0" onchange="ys_callback(event)">
+        <input id="yearSlider" type="range" min="0" max="10" value="0" onchange="ys_callback(event)" disabled>
           <span id='ysSpan'></span>
         </input>
       </div>
+      <button id="PlayPause" onclick="playpause_callback(event)" >Play</button>
     </div>
 
   </body>

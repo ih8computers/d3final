@@ -37,11 +37,21 @@ function changeSlide(dir){
   //if(slide_index == 3) updateDropdown('#select_country', ["BUTTS"]);
 
   slide_display.innerHTML = "";//slide_list[slide_index].innerHTML;
+  showPlayButton();
   hideSlider();
   stopAnimation();
   if(slide_index < 1){
+    hidePlayButton();
+    disableControls();
     smam_chart();
-  } else {
+  } else if(slide_index == 1){
+    disableControls();
+    age_chart();
+  } else if(slide_index == 2){
+    enableControls();
+    age_chart();
+  } else if(slide_index == 3){
+    enableControls();
     age_chart();
   }
 
@@ -70,4 +80,28 @@ function updateDropdown(opts){
   .text(function (d) { return d; })
   .attr("value", function (d) { return d; });
 
+}
+
+function enableControls(){
+
+  d3.selectAll("input[name=gender]").attr('disabled', null);
+  d3.selectAll("#yearSlider").attr('disabled', null);
+  d3.selectAll("#select_country").attr('disabled', null);
+}
+
+function disableControls(){
+
+  d3.selectAll("input[name=gender]").attr('disabled', true);
+  d3.selectAll("#yearSlider").attr('disabled', true);
+  d3.selectAll("#select_country").attr('disabled', true);
+}
+
+function hidePlayButton(){
+  //return;
+  d3.selectAll("#PlayPause").style('display', 'none');
+}
+
+function showPlayButton(){
+  //return;
+  d3.selectAll("#PlayPause").style('display', 'block');
 }

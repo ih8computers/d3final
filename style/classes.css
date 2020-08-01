@@ -40,8 +40,14 @@
 }
 
 #gender_div {
-  right:20%;
+  left:40%;
   position:relative;
+}
+
+#PlayPause {
+  position: absolute;
+  float: right;
+  display: none;
 }
 
 circle.scatter {

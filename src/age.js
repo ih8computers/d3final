@@ -1,6 +1,8 @@
 var years = [];
 var yearIndex = 0;
 var interval_id;
+var isPaused = false;
+var isAnimating = false;
 
 function age_chart(){
 
@@ -8,6 +10,7 @@ function age_chart(){
   console.log(slide_index);
   var fdata = getFilteredData(scene.data, filters);
 
+  yearIndex = 0;
   fdata = fdata.filter(function(d){ return d.MaritalStatus == filters.status;});
   years = getYears(fdata);
   fdata = fdata.filter(function(d){ return d.YearStart == years[yearIndex];});
@@ -43,8 +46,9 @@ function age_chart(){
                   .attr('height',height)
                   .call(d3.axisLeft(y));
 
-  //setTimeout(function(){interval_id = window.setInterval(cycleYears, 5000)},5000);
-  interval_id = window.setInterval(cycleYears, 1000)
+
+  setTimeout(function(){startAnimation();},5000);
+  //interval_id = window.setInterval(cycleYears, 1000)
 }
 
 function updateAgeChart(){
@@ -89,6 +93,8 @@ function getYears(cdata){
 }
 
 function cycleYears(){
+
+  if(isPaused){ return; }
 
 	yearIndex++;
 	if(yearIndex < years.length){
@@ -139,6 +145,16 @@ function hideSlider(){
 }
 
 function stopAnimation(){
+  isAnimating = false;
   window.clearInterval(interval_id);
   yearIndex = years.length - 1;
+  document.getElementById('PlayPause').firstChild.data = "Play";
+}
+
+function startAnimation(){
+  if(isAnimating){return;}
+  isAnimating = true;
+  setupSlider(true);
+  document.getElementById('PlayPause').firstChild.data = "Pause";
+  interval_id = window.setInterval(cycleYears, 1000);
 }

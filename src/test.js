@@ -208,6 +208,7 @@ console.log("UPDATE CHART");
   } else if(slide_index == 2) {
     updateAgeChart();
     setupSlider(reset);
+    enableControls();
   } else if(slide_index == 3) {
     updateAgeChart();
     setupSlider(reset);
@@ -218,4 +219,20 @@ function loaded(){
 
   document.getElementById('loading_screen').style.display = 'none';
   document.getElementById('vis_div').style.display = 'block';
+}
+
+function playpause_callback(e){
+
+  //ppbutton_text = document.getElementById('PlayPause').firstChild.data;
+//console.log(ppbutton_text,'',e.target.firstChild.data);
+  if(e.target.firstChild.data == 'Pause'){
+    isPaused = true;
+    document.getElementById('PlayPause').firstChild.data = 'Play';
+    //console.log(ppbutton_text,'',e.target.firstChild.data);
+  } else {
+    isPaused = false;
+    if(!isAnimating){startAnimation(); return;}
+    document.getElementById('PlayPause').firstChild.data = 'Pause';
+  }
+
 }
