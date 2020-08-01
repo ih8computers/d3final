@@ -37,6 +37,8 @@ function changeSlide(dir){
   //if(slide_index == 3) updateDropdown('#select_country', ["BUTTS"]);
 
   slide_display.innerHTML = "";//slide_list[slide_index].innerHTML;
+  hideSlider();
+  stopAnimation();
   if(slide_index < 1){
     smam_chart();
   } else {

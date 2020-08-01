@@ -11,12 +11,9 @@ function age_chart(){
   fdata = fdata.filter(function(d){ return d.MaritalStatus == filters.status;});
   years = getYears(fdata);
   fdata = fdata.filter(function(d){ return d.YearStart == years[yearIndex];});
-  var domain = fdata.map(d => d.AgeGroup);
+  var domain = fdata.map(d => d.AgeGroup).sort();;
 
-  // width = 800;
-  // height = 800;
-  // margin = 50;
-  // xax = width - margin;
+  setupSlider(true);
 
   x=d3.scaleBand().domain(domain).range([0,width]).padding(0.2);
   y=d3.scaleLinear().domain([0,100]).range([height,0]);
@@ -47,7 +44,7 @@ function age_chart(){
                   .call(d3.axisLeft(y));
 
   //setTimeout(function(){interval_id = window.setInterval(cycleYears, 5000)},5000);
-  interval_id = window.setInterval(cycleYears, 3000)
+  interval_id = window.setInterval(cycleYears, 1000)
 }
 
 function updateAgeChart(){
@@ -59,12 +56,7 @@ function updateAgeChart(){
   fdata = fdata.filter(function(d){ return d.MaritalStatus == filters.status;});
   years = getYears(fdata);
   fdata = fdata.filter(function(d){ return d.YearStart == years[yearIndex];});
-  var domain = fdata.map(d => d.AgeGroup);
-
-  // width = 800;
-  // height = 800;
-  // margin = 50;
-  // xax = width - margin;
+  var domain = fdata.map(d => d.AgeGroup).sort();
 
   x=d3.scaleBand().domain(domain).range([0,width]).padding(0.2);
   y=d3.scaleLinear().domain([0,100]).range([height,0]);
@@ -72,7 +64,7 @@ function updateAgeChart(){
   ch = d3.select('svg').selectAll('g.rect-group').selectAll('rect').data(fdata);
   ch.enter().append('rect').merge(ch)
     .transition()
-    .duration(2000)
+    .duration(700)
     .attr('x', function(d,i){return x(d.AgeGroup);})
     .attr('y', function(d,i){console.log(y(d.DataValue));return y(d.DataValue);})
     .attr('width', function(d,i){return x.bandwidth()})
@@ -101,11 +93,52 @@ function cycleYears(){
 	yearIndex++;
 	if(yearIndex < years.length){
 		//setTimeout(cycleYears, 5000);
-    console.log(yearIndex,' ',years.length,' ',years[yearIndex],' ', years);
+    //console.log(yearIndex,' ',years.length,' ',years[yearIndex],' ', years);
+
     updateChart();
   } else {
-    window.clearInterval(interval_id);
-    yearIndex = 0;
+
+    stopAnimation();
   }
 
+  // document.getElementById('yearSlider').value = yearIndex;
+  // span = document.getElementById('ysSpan');
+  // span.innerHTML = '';
+  // span.appendChild(document.createTextNode(''+years[yearIndex]));
+
+}
+
+function setupSlider(reset = false){
+
+  document.getElementById('ys_div').style.display = "block";
+  document.getElementById('yearSlider').max = years.length-1;
+
+  if(reset){
+    yearIndex = 0;
+  }
+  document.getElementById('yearSlider').value = yearIndex;
+
+  span = document.getElementById('ysSpan');
+  span.innerHTML = '';
+  span.appendChild(document.createTextNode(''+years[yearIndex]));
+}
+
+function ys_callback(e){
+
+  span = document.getElementById('ysSpan');
+  span.innerHTML = '';
+  span.appendChild(document.createTextNode(''+years[e.target.value]));
+
+  yearIndex = e.target.value;
+  updateAgeChart();
+}
+
+function hideSlider(){
+  document.getElementById('ys_div').style.display = "none";
+  document.getElementById('yearSlider').value = 0;
+}
+
+function stopAnimation(){
+  window.clearInterval(interval_id);
+  yearIndex = years.length - 1;
 }

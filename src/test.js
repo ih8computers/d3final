@@ -5,7 +5,7 @@ var currJSON = {};
 var ageJSON = {};
 
 var width = 800;
-var height = 400;
+var height = 300;
 var margin = 50;
 var xax = height + margin;
 
@@ -56,21 +56,21 @@ async function pullData(){
 }
 
 function radio_callback(e){
-
+console.log("RADIO CALLBACK");
   var selected_sex = this.value;
   filters.sex = selected_sex;
 
-  updateChart();
+  updateChart(true);
 
 }
 
 function drop_callback(){
-
+console.log("DROP_CALLBACK");
   //alert("omg");
   var selected_country = this.value;
   filters.country = selected_country;
   // TODO: updateChart
-  updateChart();
+  updateChart(true);
 
 }
 
@@ -88,19 +88,12 @@ function updateSMAMChart(){
   var fdata = getFilteredData(scene.data, filters);
   var domain = fdata.domain;
 
-  // width = 800;
-  // height = 800;
-  // margin = 50;
-  // xax = width - margin;
-
   x=d3.scaleBand().domain(domain).range([0,width]);
   y=d3.scaleLinear().domain([0,30]).range([height,0]);
 
   var bars = d3.select('svg')
               .selectAll('g.bargroup')
               .selectAll('rect').data(fdata,function(d){return d.DataValue;});
-
-  //bars.exit().remove();
 
   bars.enter().append('rect').merge(bars)
                   //.transition()
@@ -126,7 +119,7 @@ function updateSMAMChart(){
 function setupListeners(){
 
   // radio listener
-  d3.selectAll("input")
+  d3.selectAll("input[name=gender]")
   .on('change', radio_callback);
 
   // dropdown listener
@@ -171,14 +164,6 @@ function smam_chart(){
   var fdata = getFilteredData(scene.data, filters);
   var domain = fdata.map(d => d.YearStart);//fdata.domain;
 
-  //console.log(fdata);
-  //console.log(fdata.domain);
-
-  // width = 800;
-  // height = 800;
-  // margin = 50;
-  // xax = width - margin;
-
   x=d3.scaleBand().domain(domain).range([0,width]);
   y=d3.scaleLinear().domain([0,30]).range([height,0]);
   //x.domain(d3.extent(fdata, function(d) { return d.YearStart; }));
@@ -189,8 +174,6 @@ function smam_chart(){
                   .classed('bargroup', true)
                   .attr('transform',"translate("+margin+","+margin+")")
                   .selectAll('rect').data(fdata,function(d){return d.DataValue;});
-
-  //bars.exit().remove();
 
   bars.enter().append('rect').merge(bars)
                   //.transition()
@@ -215,21 +198,19 @@ function smam_chart(){
                   .call(d3.axisLeft(y).tickValues([20,25,25.2,25.5,30]).tickFormat(d3.format("~s")));
 }
 
-/*
-console.log(fdata);
-  if(filters.sex == 'Men'){ fdata = [{'DataValue':20, 'YearStart':domain[0]},
-{'DataValue':25, 'YearStart':domain[1]},{'DataValue':30, 'YearStart':domain[2]}];}
-  else{ fdata = [{'DataValue':10, 'YearStart':domain[0]},
-{'DataValue':15, 'YearStart':domain[1]},{'DataValue':20, 'YearStart':domain[2]}];}
-
-*/
-
-function updateChart(){
-
+function updateChart(reset = false){
+console.log("UPDATE CHART");
   if(slide_index == 0){
     updateSMAMChart();
   } else if(slide_index == 1) {
     updateAgeChart();
+    setupSlider(reset);
+  } else if(slide_index == 2) {
+    updateAgeChart();
+    setupSlider(reset);
+  } else if(slide_index == 3) {
+    updateAgeChart();
+    setupSlider(reset);
   }
 }
 

@@ -1,6 +1,6 @@
 
 #vis_div {
-  height: 500;
+  height: 400;
   width: 1000;
   position:relative;
   display:none;
@@ -16,6 +16,32 @@
 
 #display_svg {
   margin:50;
+}
+
+#ys_div {
+  display: none;
+  width: 80%;
+  margin-left: 10%;
+  position:relative;
+}
+
+#yearSlider {
+  width: 80%;
+  margin-right: 10%;
+  margin-left: 10%;
+  bottom:0;
+  position:absolute;
+}
+
+#ysSpan {
+  position: absolute;
+  top: 0;
+  right: 50%;
+}
+
+#gender_div {
+  right:20%;
+  position:relative;
 }
 
 circle.scatter {
@@ -114,4 +140,5 @@ button.scatter:hover {
 .droppy {
   top: 0;
   position: absolute;
+  left:10%;
 }
