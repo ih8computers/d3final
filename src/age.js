@@ -17,12 +17,13 @@ function age_chart(){
   fdata = fdata.filter(function(d){ return d.MaritalStatus == filters.status;});
   years = getYears(fdata);
   fdata = fdata.filter(function(d){ return d.YearStart == years[yearIndex];});
-  var domain = fdata.map(d => d.AgeGroup).sort();;
+  var domain = fdata.map(d => d.AgeGroup).sort();
+  var yMaxDomain = Math.max(...fdata.map(key => (parseFloat(key.DataValue))).sort());
 
   setupSlider(true);
 
   x=d3.scaleBand().domain(domain).range([0,width]).padding(0.2);
-  y=d3.scaleLinear().domain([0,100]).range([height,0]);
+  y=d3.scaleLinear().domain([0,yMaxDomain]).range([height,0]);
 
   var groups = ['Men', 'Women'];
   var xgroupScale = d3.scaleBand()
@@ -94,9 +95,9 @@ womenMaxYear = sexMaxGlobal["Women"].year;
 //console.log(menMax,'',womenMax);
 d3.select('svg').selectAll('.annotation').remove();
 if(sexMaxGlobal["Men"].year != -13)
-  annotateAgeMen(menMax, menMaxYear, y, x, xgroupScale, 100);
+  annotateAgeMen(menMax, menMaxYear, y, x, xgroupScale, yMaxDomain);
 if(sexMaxGlobal["Women"].year != -13)
-  annotateAgeWomen(womenMax, womenMaxYear, y, x, xgroupScale, 100);
+  annotateAgeWomen(womenMax, womenMaxYear, y, x, xgroupScale, yMaxDomain);
 
 
   setTimeout(function(){startAnimation();},5000);
@@ -112,9 +113,10 @@ function updateAgeChart(){
   years = getYears(fdata);
   fdata = fdata.filter(function(d){ return d.YearStart == years[yearIndex];});
   var domain = fdata.map(d => d.AgeGroup).sort();
+  var yMaxDomain = Math.max(...fdata.map(key => (parseFloat(key.DataValue))).sort());
 
   x=d3.scaleBand().domain(domain).range([0,width]).padding(0.2);
-  y=d3.scaleLinear().domain([0,100]).range([height,0]);
+  y=d3.scaleLinear().domain([0,yMaxDomain]).range([height,0]);
 
   var groups = ['Men', 'Women'];
   var xgroupScale = d3.scaleBand()
@@ -193,9 +195,9 @@ function updateAgeChart(){
   //console.log(menMax,'',womenMax);
   d3.select('svg').selectAll('.annotation').remove();
   if(sexMaxGlobal["Men"].year != -13)
-    annotateAgeMen(menMax, menMaxYear, y, x, xgroupScale, 100);
+    annotateAgeMen(menMax, menMaxYear, y, x, xgroupScale, yMaxDomain);
   if(sexMaxGlobal["Women"].year != -13)
-    annotateAgeWomen(womenMax, womenMaxYear, y, x, xgroupScale, 100);
+    annotateAgeWomen(womenMax, womenMaxYear, y, x, xgroupScale, yMaxDomain);
 }
 
 function getYears(cdata){

@@ -51,17 +51,21 @@ function changeSlide(dir){
   showPlayButton();
   hideSlider();
   stopAnimation();
+  reset_sexmaxglobal();
   if(slide_index < 1){
     hidePlayButton();
     //disableControls();
     smam_chart();
     disableControls();
   } else if(slide_index == 1){
+    filters.status = "Married";
     disableControls();
     age_chart();
   } else if(slide_index == 2){
+    filters.status = "Divorced";
     disableControls();
-    divorce_chart();
+    //divorce_chart();
+    age_chart();
   } else if(slide_index == 3){
     enableControls();
     age_chart();

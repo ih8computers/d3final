@@ -104,66 +104,6 @@ body {
   background: #F5F5F5;
 }
 
-circle.scatter {
-  fill: lightblue;
-  stroke: black;
-  color: blue;
-}
-
-circle.scatter:hover {
-  fill: blue;
-  stroke: black;
-  color: blue;
-}
-
-circle.scatter2 {
-  fill: orange;
-  stroke: black;
-  color: blue;
-}
-
-circle.scatter2:hover {
-  fill: red;
-  stroke: black;
-  color: blue;
-}
-
-circle.scatter3 {
-  fill: yellow;
-  stroke: black;
-  color: blue;
-}
-
-circle.scatter3:hover {
-  fill: purple;
-  stroke: black;
-  color: blue;
-}
-
-circle.scatter4 {
-  fill: green;
-  stroke: black;
-  color: blue;
-}
-
-circle.scatter4:hover {
-  fill: lightblue;
-  stroke: black;
-  color: blue;
-}
-
-button.scatter {
-  fill: red;
-  stroke: black;
-  color: red;
-}
-
-button.scatter:hover {
-  fill: red;
-  stroke: black;
-  color: blue;
-}
-
 /* Next & previous buttons */
 .prev, .next {
   cursor: pointer;

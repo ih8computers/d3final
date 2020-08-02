@@ -310,7 +310,8 @@ console.log("UPDATE CHART");
     updateAgeChart();
     setupSlider(reset);
   } else if(slide_index == 2) {
-    updateDivorceChart();
+    //updateDivorceChart();
+    updateAgeChart();
     setupSlider(reset);
     enableControls();
   } else if(slide_index == 3) {
@@ -455,7 +456,7 @@ function tt_off(that, d, i){
 function getTT(d){
 
   rethtml = "";
-console.log("SLIDEINDEX: ", slide_index);
+
   if( slide_index < 1 ) {
 
     rethtml += "<b>SMAM: </b>" + d.value;
@@ -466,7 +467,7 @@ console.log("SLIDEINDEX: ", slide_index);
   } else if( slide_index >= 1 ) {
 
     rethtml += "<b>Age Group: </b>" + d.age;
-    rethtml += "<br><b>% Married: </b>" + d.value;
+    rethtml += "<br><b>% "+ filters.status +": </b>" + d.value;
     rethtml += "<br><b>Sex: </b>"  + d.key;
     rethtml += "<br><b>Year: </b>" + d.year;
     rethtml += "<br><b>Data Catalog: </b>" + d.sname;
