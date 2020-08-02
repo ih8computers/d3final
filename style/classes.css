@@ -54,6 +54,10 @@
   margin-left: 25;
 }
 
+#desc_div {
+  display: block;
+}
+
 .men_square {
   position:absolute;
   display: inline-block;
@@ -76,6 +80,10 @@
 
 .wmq2 {
   margin-left: 18;
+}
+
+.chartTitle {
+  
 }
 
 circle.scatter {

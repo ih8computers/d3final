@@ -7,7 +7,11 @@
 <link rel="stylesheet" type="text/css" href="style/vis_display.css">
 
   <body onload="init()">
-    <h1>Landing Page</h1>
+    <h3 class="chartTitle" style="display:block;">Mean Age at Marriage by Year</h3>
+    <h3 class="chartTitle" style="display:none;">Percent Married by Age Group</h3>
+    <h3 class="chartTitle" style="display:none;">Percent Divorced by Age Group</h3>
+    <h3 class="chartTitle" style="display:none;">Your Choice</h3>
+    <p>Supple info</p>
 
     <div id='loading_screen' > Downloading data ...
       <img src="resources/loadingkid.gif"></img>
@@ -44,6 +48,14 @@
       <button id="PlayPause" onclick="playpause_callback(event)" >Play</button>
     </div>
 
+    <div id="desc_div">
+      <br><br>
+      <br><br>
+      <br><br>
+      <br>
+      <p>United Nations, Department of Economic and Social Affairs, Population Division (2017). World Marriage Data 2017 (POP/DB/Marr/Rev2017)</p>
+      <p>World Marriage Data 2017 provides a comparable and up-to-date set of data on the marital status of the population by age and sex for 232 countries or areas of the world as of September 2017.</p>
+    </div>
   </body>
 
 </html>

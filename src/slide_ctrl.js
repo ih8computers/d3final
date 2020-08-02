@@ -3,13 +3,16 @@
 var slide_index = 0;
 var slide_Max = null;
 var slide_class = "svg_slide";
+var title_class = "chartTitle";
 var slide_list = null;
+var title_list = null;
 var display_svg = null;
 
 //var update_slide = [ud_smam, ud_ever, ud_age, ud_curr];
 
 function onload_slides(){
 
+  title_list = document.getElementsByClassName(title_class);
   slide_list = document.getElementsByClassName(slide_class);
   slide_display = document.getElementById('display_svg');
   slide_Max = 3//;slide_list.length -1;
@@ -25,9 +28,12 @@ function changeSlide(dir){
   //slide_list = document.getElementsByClassName(slide_class);
 
 
-  //for(i = 0; i < slide_list.length; i++){
-  //  slide_list[i].display = "none";
-  //}
+  for(i = 0; i < title_list.length; i++){
+    title_list[i].style.display = "none";
+  }
+
+  title_list[slide_index].style.display = "block";
+  //d3.selectAll(title_list[slide_index]).style('display', 'block');
 
 //  alert(slide)display.innerHTML);
 
