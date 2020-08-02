@@ -114,10 +114,11 @@ function updateSMAMChart(){
   var bars = d3.select('svg')
                .selectAll('g.over')
                .attr('transform',"translate("+margin+","+margin+")")
+               .selectAll("g")
                .data(fdata)
                .join("g")
-                .classed('over', true)
-                .attr("transform", d => `translate(${x(d['YearStart'])},${margin})`)
+                //.classed('over', true)
+                .attr("transform", d => `translate(${x(d['YearStart'])},0)`)
                .selectAll("rect")
                .data(function(d){
 
@@ -153,16 +154,16 @@ function updateSMAMChart(){
                   .attr('height',height)
                   .call(d3.axisLeft(y));
 
-  console.log(sexMax);
-  menMax = sexMax["Men"].max;//Math.max(...sexMax["Men"].map(key => parseFloat(key)).sort());
-  menMaxYear = sexMax["Men"].year;
-  womenMax = sexMax["Women"].max;//Math.max(...sexMax["Women"].map(key => parseFloat(key)).sort());
-  womenMaxYear = sexMax["Women"].year;
-  console.log(menMax,'',womenMax);
-  if(sexMax["Men"].year != -13)
-    annotateMen(menMax, menMaxYear, y, x, xgroupScale, yMaxDomain);
-  if(sexMax["Women"].year != -13)
-    annotateWomen(womenMax, womenMaxYear, y, x, xgroupScale, yMaxDomain);
+  // console.log(sexMax);
+  // menMax = sexMax["Men"].max;//Math.max(...sexMax["Men"].map(key => parseFloat(key)).sort());
+  // menMaxYear = sexMax["Men"].year;
+  // womenMax = sexMax["Women"].max;//Math.max(...sexMax["Women"].map(key => parseFloat(key)).sort());
+  // womenMaxYear = sexMax["Women"].year;
+  // console.log(menMax,'',womenMax);
+  // if(sexMax["Men"].year != -13)
+  //   annotateMen(menMax, menMaxYear, y, x, xgroupScale, yMaxDomain);
+  // if(sexMax["Women"].year != -13)
+  //   annotateWomen(womenMax, womenMaxYear, y, x, xgroupScale, yMaxDomain);
 
 }
 
@@ -212,7 +213,7 @@ function smam_chart(){
   var scene = scene_list[slide_index];
   console.log(slide_index);
   var fdata = getFilteredData(scene.data, filters);
-  var domain = fdata.map(d => d.YearStart);//fdata.domain;
+  var domain = fdata.map(key => (key.YearStart)).sort();
   var yMaxDomain = Math.max(...fdata.map(key => (parseFloat(key.DataValue))).sort());
   console.log('yMAX ',yMaxDomain);
 
@@ -232,68 +233,56 @@ function smam_chart(){
 
   var yvals = [];
   var sexMax = [];
-  sexMax["Men"] = {max : 0, year : -13};
-  sexMax["Women"] = {max : 0, year : -13};
+  sexMax["Men"] = [];
+  sexMax["Women"] = [];
 
+    var bars = d3.select('svg')
+                .append('g')
+                .attr('transform',"translate("+margin+","+margin+")")
+                .classed('over',true)
+                .selectAll("g")
+                .data(fdata)
+                .join("g")
+                  .attr("transform", d => `translate(${x(d['YearStart'])},0)`)
+                .selectAll("rect")
+                .data(function(d){
 
-  var bars = d3.select('svg')
-               .selectAll('g.over')
-               .attr('transform',"translate("+margin+","+margin+")")
-               .data(fdata)
-               .join("g")
-                .classed('over', true)
-                .attr("transform", d => `translate(${x(d['YearStart']+margin)},${margin})`)
-               .selectAll("rect")
-               .data(function(d){
+                  ret = groups.map(key => ({key: key, value: d.Sex == key ? d.DataValue : 0}));
+                  console.log(d.Sex);
 
-                ret = groups.map(key => ({key: key, value: d.Sex == key ? d.DataValue : 0}));
-                console.log(d.Sex);
-                if(sexMax[d.Sex].max < d.DataValue){
-                  sexMax[d.Sex].max = parseFloat(d.DataValue);
-                  sexMax[d.Sex].year = parseFloat(d.YearStart);
-                }
-                return ret;
-              })
-              .join('rect')
-                .attr("x", function(d){ return xgroupScale(d.key);})
-                .attr("y", function(d){ console.log(d.value);return y(d.value);})
-                .attr("width", xgroupScale.bandwidth())
-                .attr("height", d => height - y(d.value))
-                .attr("fill", d => color(d.key));
-
-  // bars.enter().append('rect').merge(bars)
-  //                                 //.transition()
-  //                                 //.duration(2800)
-  //             .attr('x', function(d,i){console.log("hello");return xgroupScale(d.key);})
-  //             .attr('y', function(d,i){return y(d.value);})
-  //             .attr('width', function(d,i){return xgroupScale.bandwidth()})
-  //             .attr('height', function(d,i){return height-y(d.value);})
-  //             .attr("fill", function(d) { return color(d.key); });
+                  sexMax[d.Sex].push(d.DataValue);
+                  return ret;
+                })
+                //.data(function(d){ret = {key:d.Sex, value:d.DataValue}; console.log(ret); return ret;})
+                .join('rect')
+                  .attr("x", function(d){ return xgroupScale(d.key);})
+                  .attr("y", function(d){ console.log(d.value);return y(d.value);})
+                  .attr("width", xgroupScale.bandwidth())
+                  .attr("height", d => height - y(d.value))
+                  .attr("fill", d => color(d.key));
 
   d3.select('svg').attr('width',width+2*margin)
                   .attr('height', height+2*margin)
                   .append('g')
-                  .classed('x-axisgroup',true)
+                  .classed('x-axisgroup', true)
                   .attr('transform',"translate("+margin+","+xax+")")
                   .call(d3.axisBottom(x));
   d3.select('svg').attr('width',width+2*margin)
                   .attr('height', height+2*margin)
                   .append('g')
-                  .classed('y-axisgroup',true)
+                  .classed('y-axisgroup', true)
                   .attr('transform',"translate("+margin+","+margin+")")
                   .attr('height',height)
-                  .call(d3.axisLeft(y));
+                  .call(d3.axisLeft(y));//.tickValues([20,25,25.2,25.5,30]).tickFormat(d3.format("~s")));
 
-  console.log(sexMax);
-  menMax = sexMax["Men"].max;//Math.max(...sexMax["Men"].map(key => parseFloat(key)).sort());
-  menMaxYear = sexMax["Men"].year;
-  womenMax = sexMax["Women"].max;//Math.max(...sexMax["Women"].map(key => parseFloat(key)).sort());
-  womenMaxYear = sexMax["Women"].year;
-  console.log(menMax,'',womenMax);
-  if(sexMax["Men"].year != -13)
-    annotateMen(menMax, menMaxYear, y, x, xgroupScale, yMaxDomain);
-  if(sexMax["Women"].year != -13)
-    annotateWomen(womenMax, womenMaxYear, y, x, xgroupScale, yMaxDomain);
+  // console.log(sexMax);
+  // menMax = Math.max(...sexMax["Men"].map(key => parseFloat(key)).sort());
+  // womenMax = Math.max(...sexMax["Women"].map(key => parseFloat(key)).sort());
+  // console.log(menMax,'',womenMax);
+  //
+  // annotateMen(menMax, y, x, xgroupScale, yMaxDomain);
+  // annotateWomen(womenMax, y, x, xgroupScale, yMaxDomain);
+
 }
 
 function updateChart(reset = false){
