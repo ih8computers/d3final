@@ -94,25 +94,62 @@ function updateAgeChart(){
   x=d3.scaleBand().domain(domain).range([0,width]).padding(0.2);
   y=d3.scaleLinear().domain([0,100]).range([height,0]);
 
-  ch = d3.select('svg').selectAll('g.rect-group').selectAll('rect').data(fdata);
-  ch.enter().append('rect').merge(ch)
-    .transition()
-    .duration(700)
-    .attr('x', function(d,i){return x(d.AgeGroup);})
-    .attr('y', function(d,i){console.log(y(d.DataValue));return y(d.DataValue);})
-    .attr('width', function(d,i){return x.bandwidth()})
-    .attr('height', function(d,i){return height-y(d.DataValue);});
+  var groups = ['Men', 'Women'];
+  var xgroupScale = d3.scaleBand()
+  .domain(groups)
+  .range([0, x.bandwidth()])
+  .padding([0.05]);
 
-  ch.exit().remove();
+  var color = d3.scaleOrdinal()
+    .domain(groups)
+    .range(['lightblue','pink'])
 
-  d3.select('svg').selectAll('g.xaxis-group')
-                	.attr('transform',"translate("+margin+","+xax+")")
-                	.call(d3.axisBottom(x));
-	d3.select('svg').selectAll('g.yaxis-group')
-                	.attr('transform',"translate("+margin+","+margin+")")
-                	.attr('height',height)
-                	.call(d3.axisLeft(y));//.tickValues([0,100]).tickFormat(d3.format("~s")));
+  var yvals = [];
+  var sexMax = [];
+  sexMax["Men"] = {max : 0, age : -13};
+  sexMax["Women"] = {max : 0, age : -13};
 
+
+  var bars = d3.select('svg')
+               .selectAll('g.over')
+               .attr('transform',"translate("+margin+","+margin+")")
+               .selectAll("g")
+               .data(fdata)
+               .join("g")
+                //.classed('over', true)
+                .attr("transform", d => `translate(${x(d['AgeGroup'])},0)`)
+               .selectAll("rect")
+               .data(function(d){
+
+                ret = groups.map(key => ({key: key, value: d.Sex == key ? d.DataValue : 0}));
+                console.log(d.Sex);
+                if(sexMax[d.Sex].max < d.DataValue){
+                  sexMax[d.Sex].max = parseFloat(d.DataValue);
+                  sexMax[d.Sex].age = d.AgeGroup;
+                }
+                return ret;
+              })
+              .join( enter => enter.append('rect')
+                              .attr("x", function(d){ return xgroupScale(d.key);})
+                              .attr("y", function(d){ console.log(d.value);return y(d.value);})
+                              .attr("width", xgroupScale.bandwidth())
+                              .attr("height", d => height - y(d.value))
+                              .attr("fill", d => color(d.key)),
+                     update => update.transition().duration(700)
+                               .attr("x", function(d){ return xgroupScale(d.key);})
+                               .attr("y", function(d){ console.log(d.value);return y(d.value);})
+                               .attr("width", xgroupScale.bandwidth())
+                               .attr("height", d => height - y(d.value))
+                               .attr("fill", d => color(d.key)),
+                     exit   => exit.remove());
+
+  d3.select('svg').select('g.x-axisgroup')
+                  .attr('transform',"translate("+margin+","+xax+")")
+                  .call(d3.axisBottom(x));
+  d3.select('svg').select('g.y-axisgroup')
+                  .attr('transform',"translate("+margin+","+margin+")")
+                  .attr('height',height)
+                  .call(d3.axisLeft(y));
 }
 
 function getYears(cdata){
