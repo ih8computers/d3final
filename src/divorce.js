@@ -1,14 +1,6 @@
-var years = [];
-var yearIndex = 0;
-var interval_id;
-var isPaused = false;
-var isAnimating = false;
 
-var sexMaxGlobal = [];
-sexMaxGlobal["Men"] = {max : 0, age : "[20-24]", year : -13};
-sexMaxGlobal["Women"] = {max : 0, age : "[20-24]", year : -13};
 
-function age_chart(){
+function divorce_chart(){
 
   var scene = scene_list[slide_index];
   console.log(slide_index);
@@ -100,10 +92,9 @@ if(sexMaxGlobal["Women"].year != -13)
 
 
   setTimeout(function(){startAnimation();},5000);
-  //interval_id = window.setInterval(cycleYears, 1000)
 }
 
-function updateAgeChart(){
+function updateDivorceChart(){
 
   var scene = scene_list[slide_index];
   console.log(slide_index);
@@ -196,173 +187,4 @@ function updateAgeChart(){
     annotateAgeMen(menMax, menMaxYear, y, x, xgroupScale, 100);
   if(sexMaxGlobal["Women"].year != -13)
     annotateAgeWomen(womenMax, womenMaxYear, y, x, xgroupScale, 100);
-}
-
-function getYears(cdata){
-
-  return Array.from(new Set(cdata.map(function(record){
-                    return record['YearStart']})));
-
-}
-
-function cycleYears(){
-
-  if(isPaused){ return; }
-
-	yearIndex++;
-	if(yearIndex < years.length){
-		//setTimeout(cycleYears, 5000);
-    //console.log(yearIndex,' ',years.length,' ',years[yearIndex],' ', years);
-
-    updateChart();
-  } else {
-
-    stopAnimation();
-  }
-
-  // document.getElementById('yearSlider').value = yearIndex;
-  // span = document.getElementById('ysSpan');
-  // span.innerHTML = '';
-  // span.appendChild(document.createTextNode(''+years[yearIndex]));
-
-}
-
-function setupSlider(reset = false){
-
-  document.getElementById('ys_div').style.display = "block";
-  document.getElementById('yearSlider').max = years.length-1;
-
-  if(reset){
-    yearIndex = 0;
-
-    //d3.select('svg').selectAll('.annotation').remove();
-  }
-  document.getElementById('yearSlider').value = yearIndex;
-
-  span = document.getElementById('ysSpan');
-  span.innerHTML = '';
-  span.appendChild(document.createTextNode(''+years[yearIndex]));
-}
-
-function ys_callback(e){
-
-  span = document.getElementById('ysSpan');
-  span.innerHTML = '';
-  span.appendChild(document.createTextNode(''+years[e.target.value]));
-
-  yearIndex = e.target.value;
-  updateAgeChart();
-}
-
-function hideSlider(){
-  document.getElementById('ys_div').style.display = "none";
-  document.getElementById('yearSlider').value = 0;
-}
-
-function stopAnimation(){
-  isAnimating = false;
-  window.clearInterval(interval_id);
-  yearIndex = years.length - 1;
-  document.getElementById('PlayPause').firstChild.data = "Play";
-}
-
-function startAnimation(){
-  if(slide_index < 1){ return; }
-  if(isAnimating){return;}
-  isAnimating = true;
-  setupSlider(true);
-  document.getElementById('PlayPause').firstChild.data = "Pause";
-  interval_id = window.setInterval(cycleYears, 1000);
-}
-
-function annotateAgeWomen(max, year, y, x, xgroupScale, yMaxDomain){
-
-  console.log("ANNOTATE AGE WOMEN");
-
-  color = "pink";
-
-  line1x1 = margin;
-  line1x2 = line1x1 + width;
-  line2x1 = line1x2;
-  line2x2 = line2x1;
-
-  line1y1 = margin+y(max);
-  line1y2 = margin+y(max);
-  line2y1 = line1y2;
-  line2y2 = .5*margin+y(yMaxDomain);
-
-  d3.select('svg')
-    .append("line")
-    .classed('annotation',true)
-    .attr("x1", line1x1 )
-    .attr("x2", line1x2 )
-    .attr("y1", line1y1)
-    .attr("y2", line1y2)
-    .attr("stroke", color)
-    .attr("stroke-dasharray", "4");
-
-  d3.select('svg')
-    .append("line")
-    .classed('annotation',true)
-    .attr("x1", line2x1 )
-    .attr("x2", line2x2 )
-    .attr("y1", line2y1)
-    .attr("y2", line2y2)
-    .attr("stroke", color)
-    .attr("stroke-dasharray", "4");
-  d3.select('svg')
-    .append("text")
-    .classed('annotation',true)
-    .attr("x", line2x2*.7)
-    .attr("y", line2y2)
-    .text("Max: "+max+"% of Women aged: "+sexMaxGlobal["Women"].age+" ("+year+")")
-    .style("font-size", "15px");
-}
-
-function annotateAgeMen(max, year, y, x, xgroupScale, yMaxDomain){
-
-  color = "lightblue";
-
-  line1x1 = width + margin;
-  line1x2 = margin*2;
-  line2x1 = line1x2;
-  line2x2 = line2x1;
-
-  line1y1 = margin+y(max);
-  line1y2 = margin+y(max);
-  line2y1 = line1y2;
-  line2y2 = .5*margin+y(yMaxDomain);
-
-  d3.select('svg')
-    .append("line")
-    .classed('annotation',true)
-    .attr("x1", line1x1 )
-    .attr("x2", line1x2 )
-    .attr("y1", line1y1)
-    .attr("y2", line1y2)
-    .attr("stroke", color)
-    .attr("stroke-dasharray", "4");
-
-  d3.select('svg')
-    .append("line")
-    .classed('annotation',true)
-    .attr("x1", line2x1 )
-    .attr("x2", line2x2 )
-    .attr("y1", line2y1)
-    .attr("y2", line2y2)
-    .attr("stroke", color)
-    .attr("stroke-dasharray", "4");
-  d3.select('svg')
-    .append("text")
-    .classed('annotation',true)
-    .attr("x", line2x2*.9)
-    .attr("y", line2y2)
-    .text("Max: "+max+"% of Men aged: "+sexMaxGlobal["Men"].age+" ("+year+")")
-    .style("font-size", "15px");
-}
-
-function reset_sexmaxglobal(){
-  sexMaxGlobal = [];
-  sexMaxGlobal["Men"] = {max : 0, age : "[20-24]", year : -13};
-  sexMaxGlobal["Women"] = {max : 0, age : "[20-24]", year : -13};
 }

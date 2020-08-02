@@ -86,6 +86,20 @@
 
 }
 
+.tt {
+  position: absolute;
+  background: white;
+  visibility: hidden;
+  padding: 10px;
+  z-index: 10;
+  overflow-x: wrap;
+  width: 250;
+  border: 3px black;
+	border-radius: 5px 20px;
+	text-align: left;
+  opacity:80%;
+}
+
 body {
   background: #F5F5F5;
 }

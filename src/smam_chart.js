@@ -107,6 +107,14 @@ function updateChart(){
                   .attr('width', function(d,i){return x.bandwidth()})
                   .attr('height', function(d,i){return height-y(d['DataValue']);})
                   .attr("fill", function(d) { return "lightblue" });
+                  .on('mouseover', function (d, i) {
+                                   d3.select(this).transition()
+                                    .duration('50')
+                                    .attr('opacity', '.85');
+                  .on('mouseout', function (d, i) {
+                                  d3.select(this).transition()
+                                    .duration('50')
+                                    .attr('opacity', '1');
 
   bars.exit().remove();
 

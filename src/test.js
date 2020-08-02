@@ -124,7 +124,7 @@ function updateSMAMChart(){
                .selectAll("rect")
                .data(function(d){
 
-                ret = groups.map(key => ({key: key, value: d.Sex == key ? d.DataValue : 0}));
+                ret = groups.map(key => ({key: key, value: d.Sex == key ? d.DataValue : 0, year : d.YearStart, sname : d['DataCatalog ShortName']}));
                 console.log(d.Sex);
                 if(sexMax[d.Sex].max < d.DataValue){
                   sexMax[d.Sex].max = parseFloat(d.DataValue);
@@ -137,16 +137,15 @@ function updateSMAMChart(){
                 .attr("y", function(d){ console.log(d.value);return y(d.value);})
                 .attr("width", xgroupScale.bandwidth())
                 .attr("height", d => height - y(d.value))
-                .attr("fill", d => color(d.key));
-
-  // bars.enter().append('rect').merge(bars)
-  //                                 //.transition()
-  //                                 //.duration(2800)
-  //             .attr('x', function(d,i){console.log("hello");return xgroupScale(d.key);})
-  //             .attr('y', function(d,i){return y(d.value);})
-  //             .attr('width', function(d,i){return xgroupScale.bandwidth()})
-  //             .attr('height', function(d,i){return height-y(d.value);})
-  //             .attr("fill", function(d) { return color(d.key); });
+                .attr("fill", d => color(d.key))
+                .on('mousemove', function (d, i) {
+                                  tt_on(this, d, i);
+                                 })
+                .on('mouseout', function (d, i) {
+                                  tt_off(this, d, i);
+                                });
+                //.append("svg:title")
+                //.text(function(d) { return "HAM"; });
 
   d3.select('svg').select('g.x-axisgroup')
                   .attr('transform',"translate("+margin+","+xax+")")
@@ -250,7 +249,7 @@ function smam_chart(){
                 .selectAll("rect")
                 .data(function(d){
 
-                  ret = groups.map(key => ({key: key, value: d.Sex == key ? d.DataValue : 0}));
+                  ret = groups.map(key => ({key: key, value: d.Sex == key ? d.DataValue : 0, year : d.YearStart, sname : d['DataCatalog ShortName']}));
                   console.log(d.Sex);
                   if(sexMax[d.Sex].max < d.DataValue){
                     sexMax[d.Sex].max = parseFloat(d.DataValue);
@@ -264,7 +263,15 @@ function smam_chart(){
                   .attr("y", function(d){ console.log(d.value);return y(d.value);})
                   .attr("width", xgroupScale.bandwidth())
                   .attr("height", d => height - y(d.value))
-                  .attr("fill", d => color(d.key));
+                  .attr("fill", d => color(d.key))
+                  .on('mousemove', function (d, i) {
+                                    tt_on(this, d, i);
+                                   })
+                  .on('mouseout', function (d, i) {
+                                    tt_off(this, d, i);
+                                  });
+                  //.append("svg:title")
+                  //.text(function(d) { return "HAM"; });
 
   d3.select('svg').attr('width',width+2*margin)
                   .attr('height', height+2*margin)
@@ -303,7 +310,7 @@ console.log("UPDATE CHART");
     updateAgeChart();
     setupSlider(reset);
   } else if(slide_index == 2) {
-    updateAgeChart();
+    updateDivorceChart();
     setupSlider(reset);
     enableControls();
   } else if(slide_index == 3) {
@@ -333,19 +340,6 @@ function playpause_callback(e){
   }
 
 }
-
-// function xy(maxVal, maxYear, y, x, xgroupScale, yMaxDomain){
-//
-//   mencolor = "lightblue";
-//   annotate(maxVal, maxYear, y, x, xgroupScale, yMaxDomain, mencolor);
-// }
-
-// function xx(maxVal, maxYear, y, x, xgroupScale, yMaxDomain){
-//
-//   womencolor = "pink";
-//   modifier = .8;
-//   annotate(maxVal, maxYear, y, x, xgroupScale, yMaxDomain, womencolor, modifier);
-// }
 
 function annotateWomen(max, year, y, x, xgroupScale, yMaxDomain){
 
@@ -427,4 +421,60 @@ function annotateMen(max, year, y, x, xgroupScale, yMaxDomain){
     .attr("y", line2y2)
     .text("Max: "+max+" ("+year+")")
     .style("font-size", "15px");
+}
+
+function tt_on(that, d, i){
+
+  // setup tooltip
+  tooltip_div.style("visibility", "visible");
+
+  // set location
+  tooltip_div.style("top",(d3.event.pageY-25)+"px");
+  tooltip_div.style("left",(d3.event.pageX+25)+"px");
+
+  // set text
+  tooltip_div.html(getTT(d));
+
+  // change bar
+  d3.select(that).transition()
+   .duration('70')
+   .attr('opacity', '.80');
+}
+
+function tt_off(that, d, i){
+
+  // teardown tooltip
+  tooltip_div.style("visibility", "hidden");
+
+  // change bar
+  d3.select(that).transition()
+    .duration('70')
+    .attr('opacity', '1')
+}
+
+function getTT(d){
+
+  rethtml = "";
+console.log("SLIDEINDEX: ", slide_index);
+  if( slide_index < 1 ) {
+
+    rethtml += "<b>SMAM: </b>" + d.value;
+    rethtml += "<br><b>Sex: </b>"  + d.key;
+    rethtml += "<br><b>Year: </b>" + d.year;
+    rethtml += "<br><b>Data Catalog: </b>" + d.sname;
+
+  } else if( slide_index >= 1 ) {
+
+    rethtml += "<b>Age Group: </b>" + d.age;
+    rethtml += "<br><b>% Married: </b>" + d.value;
+    rethtml += "<br><b>Sex: </b>"  + d.key;
+    rethtml += "<br><b>Year: </b>" + d.year;
+    rethtml += "<br><b>Data Catalog: </b>" + d.sname;
+
+  }
+
+  rethtml += "<br>";
+
+  return rethtml;
+
 }

@@ -7,6 +7,7 @@ var title_class = "chartTitle";
 var slide_list = null;
 var title_list = null;
 var display_svg = null;
+var tooltip_div = null;
 
 //var update_slide = [ud_smam, ud_ever, ud_age, ud_curr];
 
@@ -16,6 +17,10 @@ function onload_slides(){
   slide_list = document.getElementsByClassName(slide_class);
   slide_display = document.getElementById('display_svg');
   slide_Max = 3//;slide_list.length -1;
+
+  tooltip_div = d3.select("body")
+                  .append("div")
+                  .classed("tt", true);
 
 }
 
@@ -55,8 +60,8 @@ function changeSlide(dir){
     disableControls();
     age_chart();
   } else if(slide_index == 2){
-    enableControls();
-    age_chart();
+    disableControls();
+    divorce_chart();
   } else if(slide_index == 3){
     enableControls();
     age_chart();
