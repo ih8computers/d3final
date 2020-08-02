@@ -313,7 +313,6 @@ console.log("UPDATE CHART");
     //updateDivorceChart();
     updateAgeChart();
     setupSlider(reset);
-    enableControls();
   } else if(slide_index == 3) {
     updateAgeChart();
     setupSlider(reset);

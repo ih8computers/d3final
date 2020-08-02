@@ -99,9 +99,11 @@ if(sexMaxGlobal["Men"].year != -13)
 if(sexMaxGlobal["Women"].year != -13)
   annotateAgeWomen(womenMax, womenMaxYear, y, x, xgroupScale, yMaxDomain);
 
-
-  setTimeout(function(){startAnimation();},5000);
-  //interval_id = window.setInterval(cycleYears, 1000)
+  // animate automatically if not final slide
+  if( slide_index != 3 ){
+    setTimeout(function(){startAnimation();},5000);
+  }
+  
 }
 
 function updateAgeChart(){
