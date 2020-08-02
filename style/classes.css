@@ -50,6 +50,34 @@
   display: none;
 }
 
+#gender_div>input {
+  margin-left: 25;
+}
+
+.men_square {
+  position:absolute;
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  background: lightblue;
+  bottom: 3;
+  margin-left: 3;
+}
+
+.women_square {
+  position:absolute;
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  background: pink;
+  bottom: 3;
+  margin-left: 3;
+}
+
+.wmq2 {
+  margin-left: 18;
+}
+
 circle.scatter {
   fill: lightblue;
   stroke: black;

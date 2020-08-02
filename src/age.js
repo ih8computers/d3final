@@ -152,6 +152,7 @@ function stopAnimation(){
 }
 
 function startAnimation(){
+  if(slide_index < 1){ return; }
   if(isAnimating){return;}
   isAnimating = true;
   setupSlider(true);

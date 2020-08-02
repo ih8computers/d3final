@@ -154,16 +154,17 @@ function updateSMAMChart(){
                   .attr('height',height)
                   .call(d3.axisLeft(y));
 
-  // console.log(sexMax);
-  // menMax = sexMax["Men"].max;//Math.max(...sexMax["Men"].map(key => parseFloat(key)).sort());
-  // menMaxYear = sexMax["Men"].year;
-  // womenMax = sexMax["Women"].max;//Math.max(...sexMax["Women"].map(key => parseFloat(key)).sort());
-  // womenMaxYear = sexMax["Women"].year;
-  // console.log(menMax,'',womenMax);
-  // if(sexMax["Men"].year != -13)
-  //   annotateMen(menMax, menMaxYear, y, x, xgroupScale, yMaxDomain);
-  // if(sexMax["Women"].year != -13)
-  //   annotateWomen(womenMax, womenMaxYear, y, x, xgroupScale, yMaxDomain);
+  console.log(sexMax);
+  menMax = sexMax["Men"].max;//Math.max(...sexMax["Men"].map(key => parseFloat(key)).sort());
+  menMaxYear = sexMax["Men"].year;
+  womenMax = sexMax["Women"].max;//Math.max(...sexMax["Women"].map(key => parseFloat(key)).sort());
+  womenMaxYear = sexMax["Women"].year;
+  console.log(menMax,'',womenMax);
+  d3.select('svg').selectAll('.annotation').remove();
+  if(sexMax["Men"].year != -13)
+    annotateMen(menMax, menMaxYear, y, x, xgroupScale, yMaxDomain);
+  if(sexMax["Women"].year != -13)
+    annotateWomen(womenMax, womenMaxYear, y, x, xgroupScale, yMaxDomain);
 
 }
 
@@ -233,8 +234,8 @@ function smam_chart(){
 
   var yvals = [];
   var sexMax = [];
-  sexMax["Men"] = [];
-  sexMax["Women"] = [];
+  sexMax["Men"] = {max : 0, year : -13};
+  sexMax["Women"] = {max : 0, year : -13};
 
     var bars = d3.select('svg')
                 .append('g')
@@ -249,8 +250,10 @@ function smam_chart(){
 
                   ret = groups.map(key => ({key: key, value: d.Sex == key ? d.DataValue : 0}));
                   console.log(d.Sex);
-
-                  sexMax[d.Sex].push(d.DataValue);
+                  if(sexMax[d.Sex].max < d.DataValue){
+                    sexMax[d.Sex].max = parseFloat(d.DataValue);
+                    sexMax[d.Sex].year = parseFloat(d.YearStart);
+                  }
                   return ret;
                 })
                 //.data(function(d){ret = {key:d.Sex, value:d.DataValue}; console.log(ret); return ret;})
@@ -275,13 +278,17 @@ function smam_chart(){
                   .attr('height',height)
                   .call(d3.axisLeft(y));//.tickValues([20,25,25.2,25.5,30]).tickFormat(d3.format("~s")));
 
-  // console.log(sexMax);
-  // menMax = Math.max(...sexMax["Men"].map(key => parseFloat(key)).sort());
-  // womenMax = Math.max(...sexMax["Women"].map(key => parseFloat(key)).sort());
-  // console.log(menMax,'',womenMax);
-  //
-  // annotateMen(menMax, y, x, xgroupScale, yMaxDomain);
-  // annotateWomen(womenMax, y, x, xgroupScale, yMaxDomain);
+                  console.log(sexMax);
+                  menMax = sexMax["Men"].max;//Math.max(...sexMax["Men"].map(key => parseFloat(key)).sort());
+                  menMaxYear = sexMax["Men"].year;
+                  womenMax = sexMax["Women"].max;//Math.max(...sexMax["Women"].map(key => parseFloat(key)).sort());
+                  womenMaxYear = sexMax["Women"].year;
+                  console.log(menMax,'',menMaxYear,'',womenMax,'',womenMaxYear);
+                  d3.select('svg').selectAll('.annotation').remove();
+                  if(sexMax["Men"].year != -13)
+                    annotateMen(menMax, menMaxYear, y, x, xgroupScale, yMaxDomain);
+                  if(sexMax["Women"].year != -13)
+                    annotateWomen(womenMax, womenMaxYear, y, x, xgroupScale, yMaxDomain);
 
 }
 
@@ -325,41 +332,97 @@ function playpause_callback(e){
 
 }
 
-function annotateMen(maxVal, maxYear, y, x, xgroupScale, yMaxDomain){
+// function xy(maxVal, maxYear, y, x, xgroupScale, yMaxDomain){
+//
+//   mencolor = "lightblue";
+//   annotate(maxVal, maxYear, y, x, xgroupScale, yMaxDomain, mencolor);
+// }
 
-  mencolor = "lightblue";
-  annotate(maxVal, maxYear, y, x, xgroupScale, yMaxDomain, mencolor);
-}
+// function xx(maxVal, maxYear, y, x, xgroupScale, yMaxDomain){
+//
+//   womencolor = "pink";
+//   modifier = .8;
+//   annotate(maxVal, maxYear, y, x, xgroupScale, yMaxDomain, womencolor, modifier);
+// }
 
-function annotateWomen(maxVal, maxYear, y, x, xgroupScale, yMaxDomain){
+function annotateWomen(max, year, y, x, xgroupScale, yMaxDomain){
 
-  womencolor = "pink";
-  modifier = .8;
-  annotate(maxVal, maxYear, y, x, xgroupScale, yMaxDomain, womencolor, modifier);
-}
+  color = "pink";
 
-function annotate(max, year, y, x, xgroupScale, yMaxDomain, color, mod = 1){
+  line1x1 = line1x2 = margin+x(year)+xgroupScale("Women")+xgroupScale.bandwidth()/2;
+  line2x1 = line1x2;
+  line2x2 = width;
+
+  line1y1 = margin+y(max);
+  line1y2 = line1y1 - 20;
+  line2y1 = line1y2;
+  line2y2 = .5*margin+y(yMaxDomain);
 
   d3.select('svg')
     .append("line")
-    .attr("x1", margin )
-    .attr("x2", (2*margin+width)*.60*mod )
-    .attr("y1", margin+y(max))
-    .attr("y2", margin+y(max)*mod)
+    .classed('annotation',true)
+    .attr("x1", line1x1 )
+    .attr("x2", line1x2 )
+    .attr("y1", line1y1)
+    .attr("y2", line1y2)
     .attr("stroke", color)
     .attr("stroke-dasharray", "4");
+
   d3.select('svg')
     .append("line")
-    .attr("x1", (2*margin+width)*.60*mod )
-    .attr("x2", (2*margin+width)*.85*mod*mod )
-    .attr("y1", margin+y(max)*mod)
-    .attr("y2", .5*margin+y(yMaxDomain))
+    .classed('annotation',true)
+    .attr("x1", line2x1 )
+    .attr("x2", line2x2 )
+    .attr("y1", line2y1)
+    .attr("y2", line2y2)
     .attr("stroke", color)
     .attr("stroke-dasharray", "4");
   d3.select('svg')
     .append("text")
-    .attr("x", (2*margin+width)*.85*mod*mod)
-    .attr("y", .5*margin)
+    .classed('annotation',true)
+    .attr("x", line2x2*.9)
+    .attr("y", line2y2)
+    .text("Max: "+max+" ("+year+")")
+    .style("font-size", "15px");
+}
+
+function annotateMen(max, year, y, x, xgroupScale, yMaxDomain){
+
+  color = "lightblue";
+
+  line1x1 = line1x2 = margin+x(year)+xgroupScale("Men")+xgroupScale.bandwidth()/2;
+  line2x1 = line1x2;
+  line2x2 = margin*2;
+
+  line1y1 = margin+y(max);
+  line1y2 = line1y1 - 20;
+  line2y1 = line1y2;
+  line2y2 = .5*margin+y(yMaxDomain);
+
+  d3.select('svg')
+    .append("line")
+    .classed('annotation',true)
+    .attr("x1", line1x1 )
+    .attr("x2", line1x2 )
+    .attr("y1", line1y1)
+    .attr("y2", line1y2)
+    .attr("stroke", color)
+    .attr("stroke-dasharray", "4");
+
+  d3.select('svg')
+    .append("line")
+    .classed('annotation',true)
+    .attr("x1", line2x1 )
+    .attr("x2", line2x2 )
+    .attr("y1", line2y1)
+    .attr("y2", line2y2)
+    .attr("stroke", color)
+    .attr("stroke-dasharray", "4");
+  d3.select('svg')
+    .append("text")
+    .classed('annotation',true)
+    .attr("x", line2x2*.9)
+    .attr("y", line2y2)
     .text("Max: "+max+" ("+year+")")
     .style("font-size", "15px");
 }
