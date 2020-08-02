@@ -87,25 +87,63 @@ function updateSMAMChart(){
   var scene = scene_list[slide_index];
   console.log(slide_index);
   var fdata = getFilteredData(scene.data, filters);
-  var domain = fdata.domain;
+  var domain = fdata.map(d => d.YearStart);//fdata.domain;
+  var yMaxDomain = Math.max(...fdata.map(key => (parseFloat(key.DataValue))).sort());
+  console.log('yMAX ',yMaxDomain);
 
-  x=d3.scaleBand().domain(domain).range([0,width]);
-  y=d3.scaleLinear().domain([0,30]).range([height,0]);
+  x=d3.scaleBand().domain(domain).range([0,width]).padding([0.25]);
+  y=d3.scaleLinear().domain([0,yMaxDomain]).range([height,0]);
+  //x.domain(d3.extent(fdata, function(d) { return d.YearStart; }));
+
+  var groups = ['Men', 'Women'];
+  var xgroupScale = d3.scaleBand()
+  .domain(groups)
+  .range([0, x.bandwidth()])
+  .padding([0.05]);
+
+  var color = d3.scaleOrdinal()
+    .domain(groups)
+    .range(['lightblue','pink'])
+
+  var yvals = [];
+  var sexMax = [];
+  sexMax["Men"] = {max : 0, year : -13};
+  sexMax["Women"] = {max : 0, year : -13};
+
 
   var bars = d3.select('svg')
-              .selectAll('g.bargroup')
-              .selectAll('rect').data(fdata,function(d){return d.DataValue;});
+               .selectAll('g.over')
+               .attr('transform',"translate("+margin+","+margin+")")
+               .data(fdata)
+               .join("g")
+                .classed('over', true)
+                .attr("transform", d => `translate(${x(d['YearStart'])},${margin})`)
+               .selectAll("rect")
+               .data(function(d){
 
-  bars.enter().append('rect').merge(bars)
-                  //.transition()
-                  //.duration(2800)
-                  .attr('x', function(d,i){return x(d.YearStart);})
-                  .attr('y', function(d,i){console.log(d.DataValue);return y(d.DataValue);})
-                  .attr('width', function(d,i){return x.bandwidth()})
-                  .attr('height', function(d,i){return height-y(d.DataValue);});
+                ret = groups.map(key => ({key: key, value: d.Sex == key ? d.DataValue : 0}));
+                console.log(d.Sex);
+                if(sexMax[d.Sex].max < d.DataValue){
+                  sexMax[d.Sex].max = parseFloat(d.DataValue);
+                  sexMax[d.Sex].year = parseFloat(d.YearStart);
+                }
+                return ret;
+              })
+              .join('rect')
+                .attr("x", function(d){ return xgroupScale(d.key);})
+                .attr("y", function(d){ console.log(d.value);return y(d.value);})
+                .attr("width", xgroupScale.bandwidth())
+                .attr("height", d => height - y(d.value))
+                .attr("fill", d => color(d.key));
 
-  bars.exit().remove();
-
+  // bars.enter().append('rect').merge(bars)
+  //                                 //.transition()
+  //                                 //.duration(2800)
+  //             .attr('x', function(d,i){console.log("hello");return xgroupScale(d.key);})
+  //             .attr('y', function(d,i){return y(d.value);})
+  //             .attr('width', function(d,i){return xgroupScale.bandwidth()})
+  //             .attr('height', function(d,i){return height-y(d.value);})
+  //             .attr("fill", function(d) { return color(d.key); });
 
   d3.select('svg').select('g.x-axisgroup')
                   .attr('transform',"translate("+margin+","+xax+")")
@@ -113,7 +151,18 @@ function updateSMAMChart(){
   d3.select('svg').select('g.y-axisgroup')
                   .attr('transform',"translate("+margin+","+margin+")")
                   .attr('height',height)
-                  .call(d3.axisLeft(y).tickValues([20,25,25.2,25.5,30]).tickFormat(d3.format("~s")));
+                  .call(d3.axisLeft(y));
+
+  console.log(sexMax);
+  menMax = sexMax["Men"].max;//Math.max(...sexMax["Men"].map(key => parseFloat(key)).sort());
+  menMaxYear = sexMax["Men"].year;
+  womenMax = sexMax["Women"].max;//Math.max(...sexMax["Women"].map(key => parseFloat(key)).sort());
+  womenMaxYear = sexMax["Women"].year;
+  console.log(menMax,'',womenMax);
+  if(sexMax["Men"].year != -13)
+    annotateMen(menMax, menMaxYear, y, x, xgroupScale, yMaxDomain);
+  if(sexMax["Women"].year != -13)
+    annotateWomen(womenMax, womenMaxYear, y, x, xgroupScale, yMaxDomain);
 
 }
 
@@ -188,30 +237,23 @@ function smam_chart(){
 
 
   var bars = d3.select('svg')
-               .append('g')
+               .selectAll('g.over')
                .attr('transform',"translate("+margin+","+margin+")")
-               .selectAll("g")
                .data(fdata)
                .join("g")
-                .attr("transform", d => `translate(${x(d['YearStart'])},0)`)
+                .classed('over', true)
+                .attr("transform", d => `translate(${x(d['YearStart']+margin)},${margin})`)
                .selectAll("rect")
                .data(function(d){
 
                 ret = groups.map(key => ({key: key, value: d.Sex == key ? d.DataValue : 0}));
                 console.log(d.Sex);
-
-                //sexMax[d.Sex].push(d.DataValue);
-                //sexMax[d.Sex].push(d.DataValue);
-                //sexMax[d.Sex][d.DataValue];
-
                 if(sexMax[d.Sex].max < d.DataValue){
                   sexMax[d.Sex].max = parseFloat(d.DataValue);
                   sexMax[d.Sex].year = parseFloat(d.YearStart);
                 }
-
                 return ret;
               })
-              //.data(function(d){ret = {key:d.Sex, value:d.DataValue}; console.log(ret); return ret;})
               .join('rect')
                 .attr("x", function(d){ return xgroupScale(d.key);})
                 .attr("y", function(d){ console.log(d.value);return y(d.value);})
@@ -219,28 +261,28 @@ function smam_chart(){
                 .attr("height", d => height - y(d.value))
                 .attr("fill", d => color(d.key));
 
-  bars.enter().append('rect').merge(bars)
-                                  //.transition()
-                                  //.duration(2800)
-              .attr('x', function(d,i){console.log("hello");return xgroupScale(d.key);})
-              .attr('y', function(d,i){return y(d.value);})
-              .attr('width', function(d,i){return xgroupScale.bandwidth()})
-              .attr('height', function(d,i){return height-y(d.value);})
-              .attr("fill", function(d) { return color(d.key); });
+  // bars.enter().append('rect').merge(bars)
+  //                                 //.transition()
+  //                                 //.duration(2800)
+  //             .attr('x', function(d,i){console.log("hello");return xgroupScale(d.key);})
+  //             .attr('y', function(d,i){return y(d.value);})
+  //             .attr('width', function(d,i){return xgroupScale.bandwidth()})
+  //             .attr('height', function(d,i){return height-y(d.value);})
+  //             .attr("fill", function(d) { return color(d.key); });
 
   d3.select('svg').attr('width',width+2*margin)
                   .attr('height', height+2*margin)
                   .append('g')
-                  .classed('x-axisgroup', true)
+                  .classed('x-axisgroup',true)
                   .attr('transform',"translate("+margin+","+xax+")")
                   .call(d3.axisBottom(x));
   d3.select('svg').attr('width',width+2*margin)
                   .attr('height', height+2*margin)
                   .append('g')
-                  .classed('y-axisgroup', true)
+                  .classed('y-axisgroup',true)
                   .attr('transform',"translate("+margin+","+margin+")")
                   .attr('height',height)
-                  .call(d3.axisLeft(y));//.tickValues([20,25,25.2,25.5,30]).tickFormat(d3.format("~s")));
+                  .call(d3.axisLeft(y));
 
   console.log(sexMax);
   menMax = sexMax["Men"].max;//Math.max(...sexMax["Men"].map(key => parseFloat(key)).sort());
@@ -258,6 +300,7 @@ function updateChart(reset = false){
 console.log("UPDATE CHART");
   if(slide_index == 0){
     updateSMAMChart();
+    //updateSMAMChart();
   } else if(slide_index == 1) {
     updateAgeChart();
     setupSlider(reset);
