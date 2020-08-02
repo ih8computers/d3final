@@ -60,6 +60,7 @@ console.log("RADIO CALLBACK");
   var selected_sex = this.value;
   filters.sex = selected_sex;
 
+  reset_sexmaxglobal();
   updateChart(true);
 
 }
@@ -71,6 +72,7 @@ console.log("DROP_CALLBACK");
   filters.country = selected_country;
   // TODO: updateChart
   yearIndex = 0;
+  reset_sexmaxglobal();
   updateChart(true);
 
 }
