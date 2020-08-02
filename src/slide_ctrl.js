@@ -42,8 +42,9 @@ function changeSlide(dir){
   stopAnimation();
   if(slide_index < 1){
     hidePlayButton();
-    disableControls();
+    //disableControls();
     smam_chart();
+    disableControls();
   } else if(slide_index == 1){
     disableControls();
     age_chart();
