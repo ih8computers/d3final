@@ -11,7 +11,7 @@ sexMaxGlobal["Women"] = {max : 0, age : "[20-24]", year : -13};
 function age_chart(){
 
   var scene = scene_list[slide_index];
-  console.log(slide_index);
+
   var fdata = getFilteredData(scene.data, filters);
   yearIndex = 0;
   fdata = fdata.filter(function(d){ return d.MaritalStatus == filters.status;});
@@ -52,17 +52,17 @@ function age_chart(){
               .data(function(d){
 
                 ret = groups.map(key => ({key: key, value: d.Sex == key ? d.DataValue : 0, year : d.YearStart, sname : d['DataCatalog ShortName'], age : d.AgeGroup}));
-                console.log(d.Sex);
+
                 if(sexMaxGlobal[d.Sex].max < d.DataValue && d.AgeGroup == sexMaxGlobal[d.Sex].age){
                   sexMaxGlobal[d.Sex].max = parseFloat(d.DataValue);
                   sexMaxGlobal[d.Sex].year = d.YearStart;
                 }
                 return ret;
               })
-              //.data(function(d){ret = {key:d.Sex, value:d.DataValue}; console.log(ret); return ret;})
+
               .join('rect')
                 .attr("x", function(d){ return xgroupScale(d.key);})
-                .attr("y", function(d){ console.log(d.value);return y(d.value);})
+                .attr("y", function(d){ return y(d.value);})
                 .attr("width", xgroupScale.bandwidth())
                 .attr("height", d => height - y(d.value))
                 .attr("fill", d => color(d.key))
@@ -87,12 +87,12 @@ d3.select('svg').attr('width',width+2*margin)
                 .attr('height',height)
                 .call(d3.axisLeft(y));
 
-console.log(sexMax);
+
 menMax = sexMaxGlobal["Men"].max;//Math.max(...sexMax["Men"].map(key => parseFloat(key)).sort());
 menMaxYear = sexMaxGlobal["Men"].year;
 womenMax = sexMaxGlobal["Women"].max;//Math.max(...sexMax["Women"].map(key => parseFloat(key)).sort());
 womenMaxYear = sexMaxGlobal["Women"].year;
-//console.log(menMax,'',womenMax);
+
 d3.select('svg').selectAll('.annotation').remove();
 if(sexMaxGlobal["Men"].year != -13)
   annotateAgeMen(menMax, menMaxYear, y, x, xgroupScale, yMaxDomain);
@@ -101,15 +101,14 @@ if(sexMaxGlobal["Women"].year != -13)
 
   // animate automatically if not final slide
   if( slide_index != 3 ){
-    setTimeout(function(){startAnimation();},5000);
+    setTimeout(function(){ if( slide_index != 3 ){ startAnimation(); } },5000);
   }
-  
 }
 
 function updateAgeChart(){
 
   var scene = scene_list[slide_index];
-  console.log(slide_index);
+
   var fdata = getFilteredData(scene.data, filters);
   fdata = fdata.filter(function(d){ return d.MaritalStatus == filters.status;});
   years = getYears(fdata);
@@ -148,7 +147,7 @@ function updateAgeChart(){
                .data(function(d){
 
                 ret = groups.map(key => ({key: key, value: d.Sex == key ? d.DataValue : 0, year : d.YearStart, sname : d['DataCatalog ShortName'], age : d.AgeGroup}));
-                console.log(d.Sex);
+
                 if(sexMaxGlobal[d.Sex].max < d.DataValue && d.AgeGroup == sexMaxGlobal[d.Sex].age){
                   sexMaxGlobal[d.Sex].max = parseFloat(d.DataValue);
                   sexMaxGlobal[d.Sex].year = d.YearStart;
@@ -157,7 +156,7 @@ function updateAgeChart(){
               })
               .join( enter => enter.append('rect')
                               .attr("x", function(d){ return xgroupScale(d.key);})
-                              .attr("y", function(d){ console.log(d.value);return y(d.value);})
+                              .attr("y", function(d){ return y(d.value);})
                               .attr("width", xgroupScale.bandwidth())
                               .attr("height", d => height - y(d.value))
                               .attr("fill", d => color(d.key))
@@ -175,7 +174,7 @@ function updateAgeChart(){
                                       })
                                .transition().duration(700)
                                .attr("x", function(d){ return xgroupScale(d.key);})
-                               .attr("y", function(d){ console.log(d.value);return y(d.value);})
+                               .attr("y", function(d){ return y(d.value);})
                                .attr("width", xgroupScale.bandwidth())
                                .attr("height", d => height - y(d.value))
                                .attr("fill", d => color(d.key)),
@@ -189,12 +188,12 @@ function updateAgeChart(){
                   .attr('height',height)
                   .call(d3.axisLeft(y));
 
-  console.log(sexMax);
+
   menMax = sexMaxGlobal["Men"].max;//Math.max(...sexMax["Men"].map(key => parseFloat(key)).sort());
   menMaxYear = sexMaxGlobal["Men"].year;
   womenMax = sexMaxGlobal["Women"].max;//Math.max(...sexMax["Women"].map(key => parseFloat(key)).sort());
   womenMaxYear = sexMaxGlobal["Women"].year;
-  //console.log(menMax,'',womenMax);
+
   d3.select('svg').selectAll('.annotation').remove();
   if(sexMaxGlobal["Men"].year != -13)
     annotateAgeMen(menMax, menMaxYear, y, x, xgroupScale, yMaxDomain);
@@ -215,19 +214,12 @@ function cycleYears(){
 
 	yearIndex++;
 	if(yearIndex < years.length){
-		//setTimeout(cycleYears, 5000);
-    //console.log(yearIndex,' ',years.length,' ',years[yearIndex],' ', years);
 
     updateChart();
   } else {
 
     stopAnimation();
   }
-
-  // document.getElementById('yearSlider').value = yearIndex;
-  // span = document.getElementById('ysSpan');
-  // span.innerHTML = '';
-  // span.appendChild(document.createTextNode(''+years[yearIndex]));
 
 }
 
@@ -280,8 +272,6 @@ function startAnimation(){
 }
 
 function annotateAgeWomen(max, year, y, x, xgroupScale, yMaxDomain){
-
-  console.log("ANNOTATE AGE WOMEN");
 
   color = "pink";
 

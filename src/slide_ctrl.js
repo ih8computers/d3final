@@ -59,10 +59,12 @@ function changeSlide(dir){
     disableControls();
   } else if(slide_index == 1){
     filters.status = "Married";
+    setStatus();
     disableControls();
     age_chart();
   } else if(slide_index == 2){
     filters.status = "Divorced";
+    setStatus();
     disableControls();
     //divorce_chart();
     age_chart();
@@ -74,8 +76,6 @@ function changeSlide(dir){
 }
 
 function updateDropdown(opts){
-
-  console.log('opts.len: ', opts.length);
 
   dropdown = d3.select("#select_country")
   .classed('droppy', true)
@@ -98,11 +98,19 @@ function updateDropdown(opts){
 
 }
 
+function setStatus(){
+
+  stat = document.getElementById('select_status');
+  stat.value = filters.status;
+}
+
 function enableControls(){
 
   d3.selectAll("input[name=gender]").attr('disabled', null);
   d3.selectAll("#yearSlider").attr('disabled', null);
   d3.selectAll("#select_country").attr('disabled', null);
+  d3.selectAll("#select_status").attr('disabled', null);
+
 }
 
 function disableControls(){
@@ -110,6 +118,7 @@ function disableControls(){
   d3.selectAll("input[name=gender]").attr('disabled', true);
   d3.selectAll("#yearSlider").attr('disabled', true);
   d3.selectAll("#select_country").attr('disabled', true);
+  d3.selectAll("#select_status").attr('disabled', true);
 }
 
 function hidePlayButton(){

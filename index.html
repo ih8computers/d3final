@@ -2,7 +2,6 @@
 <script src='https://d3js.org/d3.v5.min.js'></script>
 <script type="text/javascript" src="src/test.js"></script>
 <script type="text/javascript" src="src/age.js"></script>
-<script type="text/javascript" src="src/divorce.js"></script>
 <script type="text/javascript" src="src/slide_ctrl.js"></script>
 <link rel="stylesheet" type="text/css" href="style/classes.css">
 <link rel="stylesheet" type="text/css" href="style/vis_display.css">
@@ -33,6 +32,12 @@
         <div class="men_square"></div>
         <div class="women_square wmq2"></div>
       </div>
+      <select id="select_status" disabled>
+        <option value="Single">Single</option>
+        <option value="Married">Married</option>
+        <option value="Divorced">Divorced</option>
+        <option value="Widowed">Widowed</option>
+      </select>
       <svg id="display_svg" width="80%" height="80%"></svg>
       <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
       <a class="next" onclick="changeSlide(1)">&#10095;</a>

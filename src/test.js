@@ -9,15 +9,9 @@ var height = 300;
 var margin = 50;
 var xax = height + margin;
 
-// TODO: delete these
-var default_filters = {};
-default_filters.country = 'United States of America';
-default_filters.sex = 'Men';
-//
-
 var filters = {};
 filters.country = 'United States of America';
-filters.sex = 'Men';
+filters.sex = 'All';
 filters.status = 'Married';
 var scene_list = [];
 
@@ -32,17 +26,10 @@ async function pullData(){
   smamJSON.data = await d3.csv("data/SMAM.csv");
   smamJSON.countries = getCountries(smamJSON.data);
 
-  everJSON.data = null;//await d3.csv("data/EVER_MARRIED.csv");
-  everJSON.countries = null;//getCountries(everJSON.data);
-
-  currJSON.data = null;//await d3.csv("data/CURRENTLY_MARRIED.csv");
-  currJSON.countries = null;//getCountries(currJSON.data);
-
   ageJSON.data = await d3.csv("data/MARITAL_STATUS_BY_AGE.csv");
   ageJSON.countries = getCountries(ageJSON.data);
 
   scene_list = [ smamJSON, ageJSON, ageJSON, ageJSON ];
-  //scene_list.map(function(record){ record.filters = default_filters });
 
   updateDropdown(scene_list[slide_index].countries);
 
@@ -56,7 +43,7 @@ async function pullData(){
 }
 
 function radio_callback(e){
-console.log("RADIO CALLBACK");
+
   var selected_sex = this.value;
   filters.sex = selected_sex;
 
@@ -66,11 +53,21 @@ console.log("RADIO CALLBACK");
 }
 
 function drop_callback(){
-console.log("DROP_CALLBACK");
-  //alert("omg");
+
   var selected_country = this.value;
   filters.country = selected_country;
-  // TODO: updateChart
+
+  yearIndex = 0;
+  reset_sexmaxglobal();
+  updateChart(true);
+
+}
+
+function status_callback(){
+
+  var selected_status = this.value;
+  filters.status = selected_status;
+
   yearIndex = 0;
   reset_sexmaxglobal();
   updateChart(true);
@@ -87,15 +84,15 @@ function getCountries(cdata){
 function updateSMAMChart(){
 
   var scene = scene_list[slide_index];
-  console.log(slide_index);
+
   var fdata = getFilteredData(scene.data, filters);
   var domain = fdata.map(d => d.YearStart);//fdata.domain;
   var yMaxDomain = Math.max(...fdata.map(key => (parseFloat(key.DataValue))).sort());
-  console.log('yMAX ',yMaxDomain);
+
 
   x=d3.scaleBand().domain(domain).range([0,width]).padding([0.25]);
   y=d3.scaleLinear().domain([0,yMaxDomain]).range([height,0]);
-  //x.domain(d3.extent(fdata, function(d) { return d.YearStart; }));
+
 
   var groups = ['Men', 'Women'];
   var xgroupScale = d3.scaleBand()
@@ -125,7 +122,7 @@ function updateSMAMChart(){
                .data(function(d){
 
                 ret = groups.map(key => ({key: key, value: d.Sex == key ? d.DataValue : 0, year : d.YearStart, sname : d['DataCatalog ShortName']}));
-                console.log(d.Sex);
+
                 if(sexMax[d.Sex].max < d.DataValue){
                   sexMax[d.Sex].max = parseFloat(d.DataValue);
                   sexMax[d.Sex].year = parseFloat(d.YearStart);
@@ -134,7 +131,7 @@ function updateSMAMChart(){
               })
               .join('rect')
                 .attr("x", function(d){ return xgroupScale(d.key);})
-                .attr("y", function(d){ console.log(d.value);return y(d.value);})
+                .attr("y", function(d){ return y(d.value);})
                 .attr("width", xgroupScale.bandwidth())
                 .attr("height", d => height - y(d.value))
                 .attr("fill", d => color(d.key))
@@ -155,12 +152,12 @@ function updateSMAMChart(){
                   .attr('height',height)
                   .call(d3.axisLeft(y));
 
-  console.log(sexMax);
+
   menMax = sexMax["Men"].max;//Math.max(...sexMax["Men"].map(key => parseFloat(key)).sort());
   menMaxYear = sexMax["Men"].year;
   womenMax = sexMax["Women"].max;//Math.max(...sexMax["Women"].map(key => parseFloat(key)).sort());
   womenMaxYear = sexMax["Women"].year;
-  console.log(menMax,'',womenMax);
+
   d3.select('svg').selectAll('.annotation').remove();
   if(sexMax["Men"].year != -13)
     annotateMen(menMax, menMaxYear, y, x, xgroupScale, yMaxDomain);
@@ -178,6 +175,10 @@ function setupListeners(){
   // dropdown listener
   d3.select("#select_country")
   .on('change', drop_callback);
+
+  // status listener
+  d3.select("#select_status")
+  .on('change', status_callback);
 
 }
 
@@ -197,10 +198,6 @@ function getFilteredData(data, filters){
         }
 
         return true;
-         // else{
-         // 		console.log("already has it");
-         // 		return false;
-         //  }
     }
   });
 
@@ -213,15 +210,13 @@ function getFilteredData(data, filters){
 function smam_chart(){
 
   var scene = scene_list[slide_index];
-  console.log(slide_index);
+
   var fdata = getFilteredData(scene.data, filters);
   var domain = fdata.map(key => (key.YearStart)).sort();
   var yMaxDomain = Math.max(...fdata.map(key => (parseFloat(key.DataValue))).sort());
-  console.log('yMAX ',yMaxDomain);
 
   x=d3.scaleBand().domain(domain).range([0,width]).padding([0.25]);
   y=d3.scaleLinear().domain([0,yMaxDomain]).range([height,0]);
-  //x.domain(d3.extent(fdata, function(d) { return d.YearStart; }));
 
   var groups = ['Men', 'Women'];
   var xgroupScale = d3.scaleBand()
@@ -250,17 +245,17 @@ function smam_chart(){
                 .data(function(d){
 
                   ret = groups.map(key => ({key: key, value: d.Sex == key ? d.DataValue : 0, year : d.YearStart, sname : d['DataCatalog ShortName']}));
-                  console.log(d.Sex);
+
                   if(sexMax[d.Sex].max < d.DataValue){
                     sexMax[d.Sex].max = parseFloat(d.DataValue);
                     sexMax[d.Sex].year = parseFloat(d.YearStart);
                   }
                   return ret;
                 })
-                //.data(function(d){ret = {key:d.Sex, value:d.DataValue}; console.log(ret); return ret;})
+
                 .join('rect')
                   .attr("x", function(d){ return xgroupScale(d.key);})
-                  .attr("y", function(d){ console.log(d.value);return y(d.value);})
+                  .attr("y", function(d){ return y(d.value);})
                   .attr("width", xgroupScale.bandwidth())
                   .attr("height", d => height - y(d.value))
                   .attr("fill", d => color(d.key))
@@ -287,12 +282,12 @@ function smam_chart(){
                   .attr('height',height)
                   .call(d3.axisLeft(y));//.tickValues([20,25,25.2,25.5,30]).tickFormat(d3.format("~s")));
 
-                  console.log(sexMax);
+
                   menMax = sexMax["Men"].max;//Math.max(...sexMax["Men"].map(key => parseFloat(key)).sort());
                   menMaxYear = sexMax["Men"].year;
                   womenMax = sexMax["Women"].max;//Math.max(...sexMax["Women"].map(key => parseFloat(key)).sort());
                   womenMaxYear = sexMax["Women"].year;
-                  console.log(menMax,'',menMaxYear,'',womenMax,'',womenMaxYear);
+
                   d3.select('svg').selectAll('.annotation').remove();
                   if(sexMax["Men"].year != -13)
                     annotateMen(menMax, menMaxYear, y, x, xgroupScale, yMaxDomain);
@@ -302,7 +297,7 @@ function smam_chart(){
 }
 
 function updateChart(reset = false){
-console.log("UPDATE CHART");
+
   if(slide_index == 0){
     updateSMAMChart();
     //updateSMAMChart();
@@ -327,14 +322,13 @@ function loaded(){
 
 function playpause_callback(e){
 
-  //ppbutton_text = document.getElementById('PlayPause').firstChild.data;
-//console.log(ppbutton_text,'',e.target.firstChild.data);
   if(e.target.firstChild.data == 'Pause'){
     isPaused = true;
     document.getElementById('PlayPause').firstChild.data = 'Play';
-    //console.log(ppbutton_text,'',e.target.firstChild.data);
+
   } else {
     isPaused = false;
+
     if(!isAnimating){startAnimation(); return;}
     document.getElementById('PlayPause').firstChild.data = 'Pause';
   }
