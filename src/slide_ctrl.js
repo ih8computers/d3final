@@ -4,8 +4,10 @@ var slide_index = 0;
 var slide_Max = null;
 var slide_class = "svg_slide";
 var title_class = "chartTitle";
+var suppl_class = "chartSuppl";
 var slide_list = null;
 var title_list = null;
+var suppl_list = null;
 var display_svg = null;
 var tooltip_div = null;
 
@@ -14,6 +16,7 @@ var tooltip_div = null;
 function onload_slides(){
 
   title_list = document.getElementsByClassName(title_class);
+  suppl_list = document.getElementsByClassName(suppl_class);
   slide_list = document.getElementsByClassName(slide_class);
   slide_display = document.getElementById('display_svg');
   slide_Max = 3//;slide_list.length -1;
@@ -35,19 +38,16 @@ function changeSlide(dir){
 
   for(i = 0; i < title_list.length; i++){
     title_list[i].style.display = "none";
+    suppl_list[i].style.display = "none";
+
   }
 
   title_list[slide_index].style.display = "block";
-  //d3.selectAll(title_list[slide_index]).style('display', 'block');
+  suppl_list[slide_index].style.display = "block";
 
-//  alert(slide)display.innerHTML);
-
-  //update_slide[slide_index]();
   updateDropdown(scene_list[slide_index].countries);
 
-  //if(slide_index == 3) updateDropdown('#select_country', ["BUTTS"]);
-
-  slide_display.innerHTML = "";//slide_list[slide_index].innerHTML;
+  slide_display.innerHTML = "";
   showPlayButton();
   hideSlider();
   stopAnimation();

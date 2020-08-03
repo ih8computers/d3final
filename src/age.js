@@ -5,8 +5,7 @@ var isPaused = false;
 var isAnimating = false;
 
 var sexMaxGlobal = [];
-sexMaxGlobal["Men"] = {max : 0, age : "[20-24]", year : -13};
-sexMaxGlobal["Women"] = {max : 0, age : "[20-24]", year : -13};
+reset_sexmaxglobal();
 
 function age_chart(){
 
@@ -357,6 +356,11 @@ function annotateAgeMen(max, year, y, x, xgroupScale, yMaxDomain){
 
 function reset_sexmaxglobal(){
   sexMaxGlobal = [];
-  sexMaxGlobal["Men"] = {max : 0, age : "[20-24]", year : -13};
-  sexMaxGlobal["Women"] = {max : 0, age : "[20-24]", year : -13};
+  if(slide_index != 2){
+    sexMaxGlobal["Men"] = {max : 0, age : "[20-24]", year : -13};
+    sexMaxGlobal["Women"] = {max : 0, age : "[20-24]", year : -13};
+  } else {
+    sexMaxGlobal["Men"] = {max : 0, age : "[40-44]", year : -13};
+    sexMaxGlobal["Women"] = {max : 0, age : "[40-44]", year : -13};
+  }
 }

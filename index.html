@@ -11,7 +11,17 @@
     <h3 class="chartTitle" style="display:none;">Percent Married by Age Group</h3>
     <h3 class="chartTitle" style="display:none;">Percent Divorced by Age Group</h3>
     <h3 class="chartTitle" style="display:none;">Your Choice</h3>
-    <p>Supple info</p>
+    <p class="chartSuppl" style="display:block;">This chart shows the Singulate Mean Average at Marriage (SMAM) in the United States. SMAM is the mean age at first marriage among persons who
+     ever marry. Data for men is unavailable for the years 1995 and 2006, however, note the tendency for men to have a higher average age than women. Also note the general trend
+      for SMAM to increase over time. 2010 shows the highest SMAM for both men and women at 29.2 years and 27.5 years respectively. While the SMAM for men remained higher for men than for women,
+      it increased for both, perhaps reflecting higher rates of college matriculation in both young men and women. </p>
+    <p class="chartSuppl" style="display:none;">Here, we can see the percent of a particular age group which is married, changing over the span of many years. We've focused our annotations on the 20-24 age group,
+      as this group might be more dramatically affected by a shifting sociopolitical milieu. Note that 41.7% of men and 57.9% women between 20-24 were married in 1970 -- the max values available for both sexes in the dataset.
+    By 2012, the percent of married 20-24 year old men and women dropped to 7.9% and 13.3%. It's interesting to consider the possibility of the Vietnam War driving those high percentages in 1970.  </p>
+    <p class="chartSuppl" style="display:none;">This chart shows the percent of a particular age group which is divorced, changing over the course of many years. Here, our annotations focus on the
+     40-44 age group -- people who have been around long enough to get really disenchanted. As the years animate, watch how the percentage of divorced 40-44 year old men and women changes from 3.8% and 5.6% in 1970,
+     to 14.6% and 16.2% in 2014. </p>
+    <p class="chartSuppl" style="display:none;">Now it's your turn -- please take a look around!</p>
 
     <div id='loading_screen' > Downloading data ...
       <img src="resources/loadingkid.gif"></img>
@@ -25,10 +35,10 @@
         <input type="radio" name="gender" value="Women" disabled > Men
         </input>
         <div class="men_square"></div>
-        <input type="radio" name="gender" value="Men" disabled checked > Women
+        <input type="radio" name="gender" value="Men" disabled > Women
         </input>
         <div class="women_square"></div>
-        <input type="radio" name="gender" value="All" disabled > All </input>
+        <input type="radio" name="gender" value="All" disabled checked> All </input>
         <div class="men_square"></div>
         <div class="women_square wmq2"></div>
       </div>
@@ -45,8 +55,9 @@
         <input id="yearSlider" type="range" min="0" max="10" value="0" onchange="ys_callback(event)" disabled>
           <span id='ysSpan'></span>
         </input>
+        <button id="PlayPause" onclick="playpause_callback(event)" >Play</button>
       </div>
-      <button id="PlayPause" onclick="playpause_callback(event)" >Play</button>
+      <!-- <button id="PlayPause" onclick="playpause_callback(event)" >Play</button> -->
     </div>
 
     <div id="desc_div">

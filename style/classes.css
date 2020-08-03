@@ -24,6 +24,7 @@
   width: 80%;
   margin-left: 10%;
   position:relative;
+  top: -40;
 }
 
 #yearSlider {
@@ -49,6 +50,7 @@
   position: absolute;
   float: right;
   display: none;
+  top: -20;
 }
 
 #gender_div>input {
@@ -84,8 +86,12 @@
 }
 
 .chartTitle {
-
   text-align: center;
+}
+
+.chartSuppl {
+  text-align: center;
+  font-size: 16px;
 }
 
 .tt {
