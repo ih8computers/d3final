@@ -5,7 +5,8 @@ var isPaused = false;
 var isAnimating = false;
 
 var sexMaxGlobal = [];
-reset_sexmaxglobal();
+sexMaxGlobal["Men"] = {max : 0, age : "[20-24]", year : -13};
+sexMaxGlobal["Women"] = {max : 0, age : "[20-24]", year : -13};
 
 function age_chart(){
 
