@@ -39,6 +39,8 @@ async function pullData(){
 
   loaded();
 
+  setStatus();
+
 
 }
 
@@ -318,6 +320,9 @@ function loaded(){
 
   document.getElementById('loading_screen').style.display = 'none';
   document.getElementById('vis_div').style.display = 'block';
+  document.getElementById('desc_div').style.display = 'block';
+  document.getElementById('ftitle').style.display = 'block';
+  document.getElementById('fsuppl').style.display = 'block';
 }
 
 function playpause_callback(e){

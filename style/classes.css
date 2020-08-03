@@ -8,7 +8,11 @@
 }
 
 #loading_screen {
+  position: absolute;
   display:block;
+  left:36% !important;
+  top:30% !important;
+
 }
 
 #loading_screen>img{
@@ -58,7 +62,7 @@
 }
 
 #desc_div {
-  display: block;
+  display: none;
 }
 
 .men_square {
