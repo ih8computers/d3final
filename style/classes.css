@@ -92,6 +92,7 @@
 .chartSuppl {
   text-align: center;
   font-size: 16px;
+  min-height:74;
 }
 
 .tt {
